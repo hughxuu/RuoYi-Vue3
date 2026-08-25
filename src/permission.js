@@ -20,6 +20,15 @@ const isWhiteList = (path) => {
 
 router.beforeEach(async (to, from) => {
   NProgress.start()
+  // FIXME: skip login
+  if (import.meta.env.DEV) {
+    if (to.path === '/login') {
+      NProgress.done()
+      return { path: '/' }
+    }
+    return true
+  }
+
   if (getToken()) {
     to.meta.title && useSettingsStore().setTitle(to.meta.title)
     const isLock = useLockStore().isLock
