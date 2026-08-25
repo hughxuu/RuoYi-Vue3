@@ -1,22 +1,19 @@
 {
-  "name": "ruoyi",
-  "version": "3.9.2",
-  "description": "若依管理系统",
-  "author": "若依",
-  "license": "MIT",
+  "name": "dashboard",
   "type": "module",
+  "version": "0.0.1",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build:prod": "vite build",
     "build:stage": "vite build --mode staging",
-    "preview": "vite preview"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://gitee.com/y_project/RuoYi-Vue.git"
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@element-plus/icons-vue": "2.3.2",
+    "@lucide/vue": "^1.34.0",
     "@vueup/vue-quill": "1.2.0",
     "@vueuse/core": "14.1.0",
     "axios": "1.13.2",
@@ -37,8 +34,10 @@
     "vuedraggable": "4.1.0"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^9.3.0",
     "@vitejs/plugin-vue": "5.2.4",
     "autoprefixer": "^10.5.4",
+    "eslint": "^10.9.1",
     "postcss": "^8.5.26",
     "sass-embedded": "1.97.2",
     "tailwindcss": "3.4.17",
