@@ -49,7 +49,7 @@ export const constantRoutes = [
   },
   {
     path: '/screen',
-    component: () => import('@/views/screen/index.vue'),
+    component: () => import('@/views/screen/PoliceDashboard.vue'),
     name: 'PoliceDashboard',
     hidden: true,
     meta: { title: '警务站统计大屏' }
