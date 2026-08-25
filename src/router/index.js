@@ -48,6 +48,13 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/screen',
+    component: () => import('@/views/screen/index.vue'),
+    name: 'PoliceDashboard',
+    hidden: true,
+    meta: { title: '警务站统计大屏' }
+  },
+  {
     path: "/:pathMatch(.*)*",
     component: () => import('@/views/error/404'),
     hidden: true
