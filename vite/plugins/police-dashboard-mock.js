@@ -12,9 +12,11 @@ const routes = {
 }
 
 const readBody = req =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     let body = ''
-    req.on('data', chunk => { body += chunk })
+    req.on('data', (chunk) => {
+      body += chunk
+    })
     req.on('end', () => {
       if (!body) {
         resolve({})
@@ -37,7 +39,9 @@ export default function createPoliceDashboardMock() {
       server.middlewares.use(async (req, res, next) => {
         const requestUrl = new URL(req.url || '/', 'http://localhost')
         const prefix = '/dev-api/policeScreen'
-        const handlerName = requestUrl.pathname.startsWith(prefix) ? routes[requestUrl.pathname.slice(prefix.length)] : undefined
+        const handlerName = requestUrl.pathname.startsWith(prefix)
+          ? routes[requestUrl.pathname.slice(prefix.length)]
+          : undefined
 
         if (req.method !== 'POST' || !handlerName) {
           next()

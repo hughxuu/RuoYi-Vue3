@@ -1,3 +1,11 @@
+<script setup name="Index">
+const version = ref('3.9.2')
+
+function goTarget(url) {
+  window.open(url, '__blank')
+}
+</script>
+
 <template>
   <div class="app-container home">
     <el-row :gutter="20">
@@ -10,7 +18,9 @@
           <b>当前版本:</b> <span>v{{ version }}</span>
         </p>
         <p>
-          <el-tag type="danger">&yen;免费开源</el-tag>
+          <el-tag type="danger">
+            &yen;免费开源
+          </el-tag>
         </p>
         <p>
           <el-button
@@ -18,14 +28,12 @@
             icon="Cloudy"
             plain
             @click="goTarget('https://gitee.com/y_project/RuoYi-Vue')"
-            >访问码云</el-button
           >
-          <el-button
-            icon="HomeFilled"
-            plain
-            @click="goTarget('http://ruoyi.vip')"
-            >访问主页</el-button
-          >
+            访问码云
+          </el-button>
+          <el-button icon="HomeFilled" plain @click="goTarget('http://ruoyi.vip')">
+            访问主页
+          </el-button>
         </p>
       </el-col>
 
@@ -67,48 +75,44 @@
     <el-row :gutter="20">
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <el-card class="update-log">
-          <template v-slot:header>
+          <template #header>
             <div class="clearfix">
               <span>联系信息</span>
             </div>
           </template>
           <div class="body">
             <p>
-              <i class="el-icon-s-promotion"></i> 官网：<el-link
+              <i class="el-icon-s-promotion" /> 官网：<el-link
                 href="http://www.ruoyi.vip"
                 target="_blank"
-                >http://www.ruoyi.vip</el-link
               >
+                http://www.ruoyi.vip
+              </el-link>
             </p>
             <p>
-              <i class="el-icon-user-solid"></i> QQ群：<s> 满937441 </s> <s> 满887144332 </s>
+              <i class="el-icon-user-solid" /> QQ群：<s> 满937441 </s> <s> 满887144332 </s>
               <s> 满180251782 </s> <s> 满104180207 </s> <s> 满186866453 </s> <s> 满201396349 </s>
-              <s> 满101456076 </s> <s> 满101539465 </s> <s> 满264312783 </s> <s> 满167385320 </s> 
-              <s> 满104748341 </s> <s> 满160110482 </s> <s> 满170801498 </s> <s> 满108482800 </s> 
-              <s> 满101046199 </s> <s> 满136919097 </s> <s> 满143961921 </s> <s> 满174951577 </s> 
+              <s> 满101456076 </s> <s> 满101539465 </s> <s> 满264312783 </s> <s> 满167385320 </s>
+              <s> 满104748341 </s> <s> 满160110482 </s> <s> 满170801498 </s> <s> 满108482800 </s>
+              <s> 满101046199 </s> <s> 满136919097 </s> <s> 满143961921 </s> <s> 满174951577 </s>
               <s> 满161281055 </s> <s> 满138988063 </s> <s> 满151450850 </s> <s> 满224622315 </s>
               <s> 满287842588 </s> <s> 满187944233 </s> <s> 满228578329 </s> <s> 满191164766 </s>
-              <s> 满174569686 </s> <a href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=M9y5NjAl44lAL_Vh2crmEehZU_PMU6KS&authKey=ZSDz8hEREWSaPuxQV3gEwqGIaGjfRNnkB4rJjf0IvXhrSUGSGwQFmBA%2Boe8HFxyl&noverify=0&group_code=127358632" target="_blank">127358632</a>
+              <s> 满174569686 </s>
+              <a
+                href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=M9y5NjAl44lAL_Vh2crmEehZU_PMU6KS&authKey=ZSDz8hEREWSaPuxQV3gEwqGIaGjfRNnkB4rJjf0IvXhrSUGSGwQFmBA%2Boe8HFxyl&noverify=0&group_code=127358632"
+                target="_blank"
+              >127358632</a>
             </p>
+            <p><i class="el-icon-chat-dot-round" /> 微信：<a href="javascript:;">/ *若依</a></p>
             <p>
-              <i class="el-icon-chat-dot-round"></i> 微信：<a
-                href="javascript:;"
-                >/ *若依</a
-              >
-            </p>
-            <p>
-              <i class="el-icon-money"></i> 支付宝：<a
-                href="javascript:;"
-                class="支付宝信息"
-                >/ *若依</a
-              >
+              <i class="el-icon-money" /> 支付宝：<a href="javascript:;" class="支付宝信息">/ *若依</a>
             </p>
           </div>
         </el-card>
       </el-col>
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <el-card class="update-log">
-          <template v-slot:header>
+          <template #header>
             <div class="clearfix">
               <span>更新日志</span>
             </div>
@@ -950,9 +954,7 @@
                 <li>调整表头固定列默认样式</li>
                 <li>代码生成模板调整，字段为String并且必填则加空串条件</li>
                 <li>代码生成字典Integer/Long使用parseInt</li>
-                <li>
-                  修复dict_sort不可update为0的问题&查询返回增加dict_sort升序排序
-                </li>
+                <li>修复dict_sort不可update为0的问题&查询返回增加dict_sort升序排序</li>
                 <li>修正岗位导出权限注解</li>
                 <li>禁止加密密文返回前端</li>
                 <li>修复代码生成页面中的查询条件创建时间未生效的问题</li>
@@ -1108,34 +1110,20 @@
       </el-col>
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <el-card class="update-log">
-          <template v-slot:header>
+          <template #header>
             <div class="clearfix">
               <span>捐赠支持</span>
             </div>
           </template>
           <div class="body">
-            <img
-              src="@/assets/images/pay.png"
-              alt="donate"
-              style="width:100%"
-            />
-            <span style="display: inline-block; height: 30px; line-height: 30px"
-              >你可以请作者喝杯咖啡表示鼓励</span
-            >
+            <img src="@/assets/images/pay.png" alt="donate" style="width: 100%">
+            <span style="display: inline-block; height: 30px; line-height: 30px">你可以请作者喝杯咖啡表示鼓励</span>
           </div>
         </el-card>
       </el-col>
     </el-row>
   </div>
 </template>
-
-<script setup name="Index">
-const version = ref('3.9.2')
-
-function goTarget(url) {
-  window.open(url, '__blank')
-}
-</script>
 
 <style scoped lang="scss">
 .home {
@@ -1200,4 +1188,3 @@ function goTarget(url) {
   }
 }
 </style>
-

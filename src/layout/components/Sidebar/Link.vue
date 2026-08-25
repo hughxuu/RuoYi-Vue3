@@ -1,9 +1,3 @@
-<template>
-  <component :is="type" v-bind="linkProps()">
-    <slot />
-  </component>
-</template>
-
 <script setup>
 import { isExternal } from '@/utils/validate'
 
@@ -38,3 +32,9 @@ function linkProps() {
   }
 }
 </script>
+
+<template>
+  <component :is="type" v-bind="linkProps()">
+    <slot />
+  </component>
+</template>

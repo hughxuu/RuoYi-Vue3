@@ -12,7 +12,7 @@ export function listType(query) {
 // 查询字典类型详细
 export function getType(dictId) {
   return request({
-    url: '/system/dict/type/' + dictId,
+    url: `/system/dict/type/${dictId}`,
     method: 'get'
   })
 }
@@ -22,7 +22,7 @@ export function addType(data) {
   return request({
     url: '/system/dict/type',
     method: 'post',
-    data: data
+    data
   })
 }
 
@@ -31,14 +31,14 @@ export function updateType(data) {
   return request({
     url: '/system/dict/type',
     method: 'put',
-    data: data
+    data
   })
 }
 
 // 删除字典类型
 export function delType(dictId) {
   return request({
-    url: '/system/dict/type/' + dictId,
+    url: `/system/dict/type/${dictId}`,
     method: 'delete'
   })
 }

@@ -1,4 +1,4 @@
-import { createWebHistory, createRouter } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 /* Layout */
 import Layout from '@/layout'
 
@@ -55,7 +55,7 @@ export const constantRoutes = [
     meta: { title: '警务站统计大屏' }
   },
   {
-    path: "/:pathMatch(.*)*",
+    path: '/:pathMatch(.*)*',
     component: () => import('@/views/error/404'),
     hidden: true
   },
@@ -181,7 +181,7 @@ const router = createRouter({
       return savedPosition
     }
     return { top: 0 }
-  },
+  }
 })
 
 export default router

@@ -15,7 +15,7 @@ export function login(username, password, code, uuid) {
       repeatSubmit: false
     },
     method: 'post',
-    data: data
+    data
   })
 }
 
@@ -27,7 +27,7 @@ export function register(data) {
       isToken: false
     },
     method: 'post',
-    data: data
+    data
   })
 }
 
