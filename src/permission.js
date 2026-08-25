@@ -12,7 +12,7 @@ import usePermissionStore from '@/store/modules/permission'
 
 NProgress.configure({ showSpinner: false })
 
-const whiteList = ['/login', '/register']
+const whiteList = ['/login', '/register', '/screen']
 
 const isWhiteList = (path) => {
   return whiteList.some(pattern => isPathMatch(pattern, path))
@@ -60,15 +60,14 @@ router.beforeEach(async (to, from) => {
       }
     }
     return true
-  } else {
-    // 没有token
-    if (isWhiteList(to.path)) {
-      // 在免登录白名单，直接进入
-      return true
-    }
-    NProgress.done()
-    return `/login?redirect=${to.fullPath}` // 否则全部重定向到登录页
   }
+  // 没有token
+  if (isWhiteList(to.path)) {
+    // 在免登录白名单，直接进入
+    return true
+  }
+  NProgress.done()
+  return `/login?redirect=${to.fullPath}` // 否则全部重定向到登录页
 })
 
 router.afterEach(() => {
