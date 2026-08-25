@@ -1,87 +1,9 @@
-<template>
-  <div class="header-search">
-    <svg-icon class-name="search-icon" icon-class="search" @click.stop="click" />
-    <el-dialog
-      v-model="show"
-      width="600"
-      @close="close"
-      @opened="onDialogOpened"
-      :show-close="false"
-      append-to-body
-    >
-      <el-input
-        v-model="search"
-        ref="headerSearchSelectRef"
-        size="large"
-        @input="querySearch"
-        prefix-icon="Search"
-        placeholder="菜单搜索，支持标题、URL模糊查询"
-        clearable
-        @keyup.enter="selectActiveResult"
-        @keydown.up.prevent="navigateResult('up')"
-        @keydown.down.prevent="navigateResult('down')"
-      >
-      </el-input>
-
-      <div class="result-count" v-if="search && options.length > 0">
-        找到 <strong>{{ options.length }}</strong> 个结果
-      </div>
-
-      <div class="result-wrap">
-        <el-scrollbar>
-
-          <template v-if="options.length > 0">
-            <div
-              class="search-item"
-              tabindex="1"
-              v-for="(item, index) in options"
-              :key="item.path"
-              :class="{ 'is-active': index === activeIndex }"
-              :style="activeStyle(index)"
-              @mouseenter="activeIndex = index"
-              @mouseleave="activeIndex = -1"
-            >
-              <div class="left">
-                <svg-icon class="menu-icon" :icon-class="item.icon" />
-              </div>
-              <div class="search-info" @click="change(item)">
-                <div class="menu-title" v-html="highlightText(item.title.join(' / '))"></div>
-                <div class="menu-path" v-html="highlightText(item.path)"></div>
-              </div>
-              <svg-icon icon-class="enter" v-show="index === activeIndex" />
-            </div>
-          </template>
-
-          <div class="empty-state" v-else-if="search && options.length === 0">
-            <el-icon class="empty-icon"><Search /></el-icon>
-            <p class="empty-text">未找到 "<strong>{{ search }}</strong>" 相关菜单</p>
-            <p class="empty-tip">试试其他关键词或路径</p>
-          </div>
-
-        </el-scrollbar>
-      </div>
-
-      <div class="search-footer">
-        <span class="shortcut-item">
-          <kbd>↑</kbd><kbd>↓</kbd> 切换
-        </span>
-        <span class="shortcut-item">
-          <kbd>↵</kbd> 选择
-        </span>
-        <span class="shortcut-item">
-          <kbd>Esc</kbd> 关闭
-        </span>
-      </div>
-    </el-dialog>
-  </div>
-</template>
-
 <script setup>
 import Fuse from 'fuse.js'
+import usePermissionStore from '@/store/modules/permission'
+import useSettingsStore from '@/store/modules/settings'
 import { getNormalPath } from '@/utils/ruoyi'
 import { isHttp } from '@/utils/validate'
-import useSettingsStore from '@/store/modules/settings'
-import usePermissionStore from '@/store/modules/permission'
 
 const search = ref('')
 const options = ref([])
@@ -120,8 +42,8 @@ function change(val) {
   const query = val.query
   if (isHttp(p)) {
     // http(s):// 路径新窗口打开
-    const pindex = p.indexOf("http")
-    window.open(p.substr(pindex, p.length), "_blank")
+    const pindex = p.indexOf('http')
+    window.open(p.substr(pindex, p.length), '_blank')
   } else {
     if (query) {
       router.push({ path: p, query: JSON.parse(query) })
@@ -142,21 +64,26 @@ function initFuse(list) {
     threshold: 0.2,
     distance: 100,
     minMatchCharLength: 1,
-    keys: [{
-      name: 'title',
-      weight: 0.7
-    }, {
-      name: 'path',
-      weight: 0.3
-    }]
+    keys: [
+      {
+        name: 'title',
+        weight: 0.7
+      },
+      {
+        name: 'path',
+        weight: 0.3
+      }
+    ]
   })
 }
 
 function generateRoutes(routes, basePath = '', prefixTitle = []) {
   let res = []
   for (const r of routes) {
-    if (r.hidden) { continue }
-    const p = r.path.length > 0 && r.path[0] === '/' ? r.path : '/' + r.path
+    if (r.hidden) {
+      continue
+    }
+    const p = r.path.length > 0 && r.path[0] === '/' ? r.path : `/${r.path}`
     const data = {
       path: !isHttp(r.path) ? getNormalPath(basePath + p) : r.path,
       title: [...prefixTitle],
@@ -165,7 +92,7 @@ function generateRoutes(routes, basePath = '', prefixTitle = []) {
     if (r.meta && r.meta.title) {
       data.title = [...data.title, r.meta.title]
       data.icon = r.meta.icon
-      if (r.redirect !== "noRedirect") {
+      if (r.redirect !== 'noRedirect') {
         res.push(data)
       }
     }
@@ -186,13 +113,11 @@ function querySearch(query) {
   activeIndex.value = -1
   if (query !== '') {
     const q = query.toLowerCase()
-    const pathMatches = searchPool.value.filter(item =>
-      item.path.toLowerCase().includes(q)
-    )
+    const pathMatches = searchPool.value.filter(item => item.path.toLowerCase().includes(q))
     const fuseMatches = fuse.value.search(query).map(item => item.item)
     const merged = [...pathMatches]
-    fuseMatches.forEach(item => {
-      if (!merged.find(m => m.path === item.path)) {
+    fuseMatches.forEach((item) => {
+      if (!merged.some(m => m.path === item.path)) {
         merged.push(item)
       }
     })
@@ -203,17 +128,19 @@ function querySearch(query) {
 }
 
 function activeStyle(index) {
-  if (index !== activeIndex.value) return {}
+  if (index !== activeIndex.value) {
+    return {}
+  }
   return {
-    "background-color": theme.value,
-    "color": "#fff"
+    'background-color': theme.value,
+    'color': '#fff'
   }
 }
 
 function navigateResult(direction) {
-  if (direction === "up") {
+  if (direction === 'up') {
     activeIndex.value = activeIndex.value <= 0 ? options.value.length - 1 : activeIndex.value - 1
-  } else if (direction === "down") {
+  } else if (direction === 'down') {
     activeIndex.value = activeIndex.value >= options.value.length - 1 ? 0 : activeIndex.value + 1
   }
 }
@@ -225,8 +152,12 @@ function selectActiveResult() {
 }
 
 function highlightText(text) {
-  if (!text) return ''
-  if (!search.value) return text
+  if (!text) {
+    return ''
+  }
+  if (!search.value) {
+    return text
+  }
   const keyword = escapeRegExp(search.value)
   const reg = new RegExp(`(${keyword})`, 'gi')
   return text.replace(reg, '<span class="highlight">$1</span>')
@@ -245,7 +176,82 @@ watch(searchPool, (list) => {
 })
 </script>
 
-<style lang='scss' scoped>
+<template>
+  <div class="header-search">
+    <svg-icon class-name="search-icon" icon-class="search" @click.stop="click" />
+    <el-dialog
+      v-model="show"
+      width="600"
+      :show-close="false"
+      append-to-body
+      @close="close"
+      @opened="onDialogOpened"
+    >
+      <el-input
+        ref="headerSearchSelectRef"
+        v-model="search"
+        size="large"
+        prefix-icon="Search"
+        placeholder="菜单搜索，支持标题、URL模糊查询"
+        clearable
+        @input="querySearch"
+        @keyup.enter="selectActiveResult"
+        @keydown.up.prevent="navigateResult('up')"
+        @keydown.down.prevent="navigateResult('down')"
+      />
+
+      <div v-if="search && options.length > 0" class="result-count">
+        找到 <strong>{{ options.length }}</strong> 个结果
+      </div>
+
+      <div class="result-wrap">
+        <el-scrollbar>
+          <template v-if="options.length > 0">
+            <div
+              v-for="(item, index) in options"
+              :key="item.path"
+              class="search-item"
+              tabindex="1"
+              :class="{ 'is-active': index === activeIndex }"
+              :style="activeStyle(index)"
+              @mouseenter="activeIndex = index"
+              @mouseleave="activeIndex = -1"
+            >
+              <div class="left">
+                <svg-icon class="menu-icon" :icon-class="item.icon" />
+              </div>
+              <div class="search-info" @click="change(item)">
+                <div class="menu-title" v-html="highlightText(item.title.join(' / '))" />
+                <div class="menu-path" v-html="highlightText(item.path)" />
+              </div>
+              <svg-icon v-show="index === activeIndex" icon-class="enter" />
+            </div>
+          </template>
+
+          <div v-else-if="search && options.length === 0" class="empty-state">
+            <el-icon class="empty-icon">
+              <Search />
+            </el-icon>
+            <p class="empty-text">
+              未找到 "<strong>{{ search }}</strong>" 相关菜单
+            </p>
+            <p class="empty-tip">
+              试试其他关键词或路径
+            </p>
+          </div>
+        </el-scrollbar>
+      </div>
+
+      <div class="search-footer">
+        <span class="shortcut-item"> <kbd>↑</kbd><kbd>↓</kbd> 切换 </span>
+        <span class="shortcut-item"> <kbd>↵</kbd> 选择 </span>
+        <span class="shortcut-item"> <kbd>Esc</kbd> 关闭 </span>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<style lang="scss" scoped>
 :deep(.el-dialog__header) {
   padding: 6px !important;
 }

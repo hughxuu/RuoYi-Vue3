@@ -1,19 +1,3 @@
-<template>
-  <div :class="{ 'hidden': hidden }" class="pagination-container">
-    <el-pagination
-      :background="background"
-      v-model:current-page="currentPage"
-      v-model:page-size="pageSize"
-      :layout="layout"
-      :page-sizes="pageSizes"
-      :pager-count="pagerCount"
-      :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
-  </div>
-</template>
-
 <script setup>
 import { scrollTo } from '@/utils/scroll-to'
 
@@ -72,7 +56,7 @@ const pageSize = computed({
   get() {
     return props.limit
   },
-  set(val){
+  set(val) {
     emit('update:limit', val)
   }
 })
@@ -94,6 +78,22 @@ function handleCurrentChange(val) {
   }
 }
 </script>
+
+<template>
+  <div :class="{ hidden }" class="pagination-container">
+    <el-pagination
+      v-model:current-page="currentPage"
+      v-model:page-size="pageSize"
+      :background="background"
+      :layout="layout"
+      :page-sizes="pageSizes"
+      :pager-count="pagerCount"
+      :total="total"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+  </div>
+</template>
 
 <style scoped>
 .pagination-container {

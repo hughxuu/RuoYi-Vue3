@@ -1,21 +1,8 @@
-<template>
-  <el-menu class="topbar-menu" :ellipsis="false" :default-active="activeMenu" :active-text-color="theme" mode="horizontal">
-    <sidebar-item :key="route.path + index" v-for="(route, index) in topMenus" :item="route" :base-path="route.path" />
-
-    <el-sub-menu index="more" class="el-sub-menu__hide-arrow" v-if="moreRoutes.length > 0">
-      <template #title>
-        <span>更多菜单</span>
-      </template>
-      <sidebar-item :key="route.path + index" v-for="(route, index) in moreRoutes" :item="route" :base-path="route.path" />
-    </el-sub-menu>
-  </el-menu>
-</template>
-
 <script setup>
-import SidebarItem from '../Sidebar/SidebarItem'
 import useAppStore from '@/store/modules/app'
-import useSettingsStore from '@/store/modules/settings'
 import usePermissionStore from '@/store/modules/permission'
+import useSettingsStore from '@/store/modules/settings'
+import SidebarItem from '../Sidebar/SidebarItem'
 
 const route = useRoute()
 const appStore = useAppStore()
@@ -35,10 +22,10 @@ const activeMenu = computed(() => {
 
 const visibleNumber = ref(5)
 const topMenus = computed(() => {
-  return permissionStore.sidebarRouters.filter((f) => !f.hidden).slice(0, visibleNumber.value)
+  return permissionStore.sidebarRouters.filter(f => !f.hidden).slice(0, visibleNumber.value)
 })
 const moreRoutes = computed(() => {
-  return permissionStore.sidebarRouters.filter((f) => !f.hidden).slice(visibleNumber.value)
+  return permissionStore.sidebarRouters.filter(f => !f.hidden).slice(visibleNumber.value)
 })
 function setVisibleNumber() {
   const width = document.body.getBoundingClientRect().width / 3
@@ -57,9 +44,39 @@ onMounted(() => {
 })
 </script>
 
+<template>
+  <el-menu
+    class="topbar-menu"
+    :ellipsis="false"
+    :default-active="activeMenu"
+    :active-text-color="theme"
+    mode="horizontal"
+  >
+    <SidebarItem
+      v-for="(route, index) in topMenus"
+      :key="route.path + index"
+      :item="route"
+      :base-path="route.path"
+    />
+
+    <el-sub-menu v-if="moreRoutes.length > 0" index="more" class="el-sub-menu__hide-arrow">
+      <template #title>
+        <span>更多菜单</span>
+      </template>
+      <SidebarItem
+        v-for="(route, index) in moreRoutes"
+        :key="route.path + index"
+        :item="route"
+        :base-path="route.path"
+      />
+    </el-sub-menu>
+  </el-menu>
+</template>
+
 <style lang="scss">
 /* menu item */
-.topbar-menu.el-menu--horizontal .el-submenu__title, .topbar-menu.el-menu--horizontal .el-menu-item {
+.topbar-menu.el-menu--horizontal .el-submenu__title,
+.topbar-menu.el-menu--horizontal .el-menu-item {
   padding: 0 10px !important;
 }
 
@@ -72,7 +89,10 @@ onMounted(() => {
   margin: 0 10px !important;
 }
 
-.el-sub-menu.is-active .svg-icon, .el-menu-item.is-active .svg-icon + span, .el-sub-menu.is-active .svg-icon + span, .el-sub-menu.is-active .el-sub-menu__title span {
+.el-sub-menu.is-active .svg-icon,
+.el-menu-item.is-active .svg-icon + span,
+.el-sub-menu.is-active .svg-icon + span,
+.el-sub-menu.is-active .el-sub-menu__title span {
   color: v-bind(theme);
 }
 
@@ -81,7 +101,7 @@ onMounted(() => {
   float: left;
   line-height: 50px !important;
   color: #303133 !important;
-  margin: 0 15px -3px!important;
+  margin: 0 15px -3px !important;
 }
 
 /* topbar more arrow */
@@ -93,7 +113,8 @@ onMounted(() => {
 }
 
 /* menu__title el-menu-item */
-.topbar-menu.el-menu--horizontal .el-sub-menu__title, .topbar-menu.el-menu--horizontal .el-menu-item {
+.topbar-menu.el-menu--horizontal .el-sub-menu__title,
+.topbar-menu.el-menu--horizontal .el-menu-item {
   height: 60px;
 }
 </style>

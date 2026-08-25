@@ -1,8 +1,81 @@
+<script setup>
+import { getUser } from '@/api/system/user'
+
+const visible = ref(false)
+const loading = ref(false)
+const info = reactive({})
+const postOptions = ref([])
+const roleOptions = ref([])
+
+const { sys_user_sex } = useDict('sys_user_sex')
+
+const sexLabel = computed(() => selectDictLabel(sys_user_sex.value, info.sex) || '-')
+
+const postNames = computed(() => {
+  if (!postOptions.value.length || !info.postIds) {
+    return ''
+  }
+  return (
+    postOptions.value
+      .filter(p => info.postIds?.includes(p.postId))
+      .map(p => p.postName)
+      .join('、') || ''
+  )
+})
+
+const roleNames = computed(() => {
+  if (!roleOptions.value.length || !info.roleIds) {
+    return ''
+  }
+  return (
+    roleOptions.value
+      .filter(r => info.roleIds?.includes(r.roleId))
+      .map(r => r.roleName)
+      .join('、') || ''
+  )
+})
+
+const open = async (userId) => {
+  visible.value = true
+  loading.value = true
+  try {
+    const res = await getUser(userId)
+    Object.assign(info, res.data || {})
+    postOptions.value = res.posts || []
+    roleOptions.value = res.roles || []
+    info.postIds = res.postIds || []
+    info.roleIds = res.roleIds || []
+  } catch (error) {
+    console.error('获取用户信息失败:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+function handleClose() {
+  visible.value = false
+}
+
+defineExpose({
+  open
+})
+</script>
+
 <template>
-  <el-drawer title="用户信息详情" v-model="visible" direction="rtl" size="68%" append-to-body :before-close="handleClose" class="detail-drawer">
+  <el-drawer
+    v-model="visible"
+    title="用户信息详情"
+    direction="rtl"
+    size="68%"
+    append-to-body
+    :before-close="handleClose"
+    class="detail-drawer"
+  >
     <div v-loading="loading" class="drawer-content">
       <!-- 基本信息 -->
-      <h4 class="section-header">基本信息</h4>
+      <h4 class="section-header">
+        基本信息
+      </h4>
       <el-row :gutter="20" class="mb8">
         <el-col :span="12">
           <div class="info-item">
@@ -13,7 +86,7 @@
         <el-col :span="12">
           <div class="info-item">
             <label class="info-label">归属部门：</label>
-            <span class="info-value plaintext">{{ (info.dept && info.dept.deptName) }}</span>
+            <span class="info-value plaintext">{{ info.dept && info.dept.deptName }}</span>
           </div>
         </el-col>
       </el-row>
@@ -42,7 +115,9 @@
           <div class="info-item">
             <label class="info-label">用户状态：</label>
             <span class="info-value plaintext">
-              <el-tag size="small" :type="info.status === '0' ? 'success' : 'danger'">{{ info.status === '0' ? '正常' : '停用' }}</el-tag>
+              <el-tag size="small" :type="info.status === '0' ? 'success' : 'danger'">{{
+                info.status === "0" ? "正常" : "停用"
+              }}</el-tag>
             </span>
           </div>
         </el-col>
@@ -51,7 +126,7 @@
         <el-col :span="12">
           <div class="info-item">
             <label class="info-label">岗位：</label>
-            <span class="info-value plaintext">{{ postNames || '无岗位' }}</span>
+            <span class="info-value plaintext">{{ postNames || "无岗位" }}</span>
           </div>
         </el-col>
         <el-col :span="12">
@@ -65,12 +140,14 @@
         <el-col :span="24">
           <div class="info-item full-width">
             <label class="info-label">角色：</label>
-            <span class="info-value plaintext">{{ roleNames || '无角色' }}</span>
+            <span class="info-value plaintext">{{ roleNames || "无角色" }}</span>
           </div>
         </el-col>
       </el-row>
       <!-- 其他信息 -->
-      <h4 class="section-header">其他信息</h4>
+      <h4 class="section-header">
+        其他信息
+      </h4>
       <el-row :gutter="20" class="mb8">
         <el-col :span="12">
           <div class="info-item">
@@ -124,52 +201,3 @@
     </div>
   </el-drawer>
 </template>
-
-<script setup>
-import { getUser } from '@/api/system/user'
-
-const visible = ref(false)
-const loading = ref(false)
-const info = reactive({})
-const postOptions = ref([])
-const roleOptions = ref([])
-
-const { sys_user_sex } = useDict("sys_user_sex")
-
-const sexLabel = computed(() => selectDictLabel(sys_user_sex.value, info.sex) || '-')
-
-const postNames = computed(() => {
-  if (!postOptions.value.length || !info.postIds) return ''
-  return postOptions.value.filter(p => info.postIds?.includes(p.postId)).map(p => p.postName).join('、') || ''
-})
-
-const roleNames = computed(() => {
-  if (!roleOptions.value.length || !info.roleIds) return ''
-  return roleOptions.value.filter(r => info.roleIds?.includes(r.roleId)).map(r => r.roleName).join('、') || ''
-})
-
-const open = async (userId) => {
-  visible.value = true
-  loading.value = true
-  try {
-    const res = await getUser(userId)
-    Object.assign(info, res.data || {})
-    postOptions.value = res.posts || []
-    roleOptions.value = res.roles || []
-    info.postIds = res.postIds || []
-    info.roleIds = res.roleIds || []
-  } catch (error) {
-    console.error('获取用户信息失败:', error)
-  } finally {
-    loading.value = false
-  }
-}
-
-function handleClose() {
-  visible.value = false
-}
-
-defineExpose({
-  open
-})
-</script>

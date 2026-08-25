@@ -1,18 +1,18 @@
-import router from './router'
 import { ElMessage } from 'element-plus'
 import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
-import { getToken } from '@/utils/auth'
-import { isHttp, isPathMatch } from '@/utils/validate'
-import { isRelogin } from '@/utils/request'
-import useUserStore from '@/store/modules/user'
 import useLockStore from '@/store/modules/lock'
-import useSettingsStore from '@/store/modules/settings'
 import usePermissionStore from '@/store/modules/permission'
+import useSettingsStore from '@/store/modules/settings'
+import useUserStore from '@/store/modules/user'
+import { getToken } from '@/utils/auth'
+import { isRelogin } from '@/utils/request'
+import { isHttp, isPathMatch } from '@/utils/validate'
+import router from './router'
+import 'nprogress/nprogress.css'
 
 NProgress.configure({ showSpinner: false })
 
-const whiteList = ['/login', '/register']
+const whiteList = ['/login', '/register', '/screen']
 
 const isWhiteList = (path) => {
   return whiteList.some(pattern => isPathMatch(pattern, path))
@@ -46,7 +46,7 @@ router.beforeEach(async (to, from) => {
         isRelogin.show = false
         // 根据roles权限生成可访问的路由
         const accessRoutes = await usePermissionStore().generateRoutes()
-        accessRoutes.forEach(route => {
+        accessRoutes.forEach((route) => {
           if (!isHttp(route.path)) {
             router.addRoute(route)
           }
@@ -60,15 +60,14 @@ router.beforeEach(async (to, from) => {
       }
     }
     return true
-  } else {
-    // 没有token
-    if (isWhiteList(to.path)) {
-      // 在免登录白名单，直接进入
-      return true
-    }
-    NProgress.done()
-    return `/login?redirect=${to.fullPath}` // 否则全部重定向到登录页
   }
+  // 没有token
+  if (isWhiteList(to.path)) {
+    // 在免登录白名单，直接进入
+    return true
+  }
+  NProgress.done()
+  return `/login?redirect=${to.fullPath}` // 否则全部重定向到登录页
 })
 
 router.afterEach(() => {

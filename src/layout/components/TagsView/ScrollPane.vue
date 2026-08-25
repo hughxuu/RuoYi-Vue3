@@ -1,23 +1,11 @@
-<template>
-  <el-scrollbar
-    ref="scrollContainer"
-    :vertical="false"
-    class="scroll-container"
-    @wheel.prevent="handleScroll"
-  >
-    <slot />
-  </el-scrollbar>
-</template>
-
 <script setup>
 import useTagsViewStore from '@/store/modules/tagsView'
 
+const emits = defineEmits(['scroll', 'updateArrows'])
 const tagAndTagSpacing = ref(4)
 const { proxy } = getCurrentInstance()
 
 const scrollWrapper = computed(() => proxy.$refs.scrollContainer.$refs.wrapRef)
-
-const emits = defineEmits(['scroll', 'updateArrows'])
 
 onMounted(() => {
   scrollWrapper.value.addEventListener('scroll', emitScroll, true)
@@ -41,13 +29,17 @@ function smoothScrollTo(target) {
 
   function ease(t, b, c, d) {
     t /= d / 2
-    if (t < 1) return c / 2 * t * t + b
+    if (t < 1) {
+      return (c / 2) * t * t + b
+    }
     t--
-    return -c / 2 * (t * (t - 2) - 1) + b
+    return (-c / 2) * (t * (t - 2) - 1) + b
   }
 
   function step(timestamp) {
-    if (!startTime) startTime = timestamp
+    if (!startTime) {
+      startTime = timestamp
+    }
     const elapsed = timestamp - startTime
     $scrollWrapper.scrollLeft = ease(elapsed, start, distance, duration)
     if (elapsed < duration) {
@@ -103,7 +95,8 @@ function moveToTarget(currentTag) {
         }
       }
     }
-    const afterNextTagOffsetLeft = nextTag.offsetLeft + nextTag.offsetWidth + tagAndTagSpacing.value
+    const afterNextTagOffsetLeft
+      = nextTag.offsetLeft + nextTag.offsetWidth + tagAndTagSpacing.value
     const beforePrevTagOffsetLeft = prevTag.offsetLeft - tagAndTagSpacing.value
     if (afterNextTagOffsetLeft > $scrollWrapper.scrollLeft + $containerWidth) {
       smoothScrollTo(afterNextTagOffsetLeft - $containerWidth)
@@ -126,7 +119,8 @@ function getScrollState() {
   const $scrollWrapper = scrollWrapper.value
   return {
     canLeft: $scrollWrapper.scrollLeft > 0,
-    canRight: $scrollWrapper.scrollLeft < $scrollWrapper.scrollWidth - $scrollWrapper.clientWidth - 1
+    canRight:
+      $scrollWrapper.scrollLeft < $scrollWrapper.scrollWidth - $scrollWrapper.clientWidth - 1
   }
 }
 
@@ -138,7 +132,18 @@ defineExpose({
 })
 </script>
 
-<style lang='scss' scoped>
+<template>
+  <el-scrollbar
+    ref="scrollContainer"
+    :vertical="false"
+    class="scroll-container"
+    @wheel.prevent="handleScroll"
+  >
+    <slot />
+  </el-scrollbar>
+</template>
+
+<style lang="scss" scoped>
 .scroll-container {
   white-space: nowrap;
   position: relative;
