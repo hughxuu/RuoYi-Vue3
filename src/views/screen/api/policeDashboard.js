@@ -67,18 +67,16 @@ export function getUnitOptions(params) {
 }
 
 export async function getDashboardData(params) {
-  const [alarmKpi, result, pie, lineFugitive, lineAlarm, rank, juvenile, units] = await Promise.all(
-    [
-      getAlarmKpi(params),
-      getResultKpi(params),
-      getMinorPie(params),
-      getFugitiveTrend(params),
-      getAlarmTrend(params),
-      getUnitRank(params),
-      getJuvenileTrend(params),
-      getUnitOptions(params)
-    ]
-  )
+  const [alarmKpi, result, pie, lineFugitive, lineAlarm, rank, juvenile, units] = await Promise.all([
+    getAlarmKpi(params),
+    getResultKpi(params),
+    getMinorPie(params),
+    getFugitiveTrend(params),
+    getAlarmTrend(params),
+    getUnitRank(params),
+    getJuvenileTrend(params),
+    getUnitOptions(params)
+  ])
 
   return {
     updateTime: alarmKpi.updateTime,
