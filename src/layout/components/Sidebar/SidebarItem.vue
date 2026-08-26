@@ -64,7 +64,7 @@ function resolvePath(routePath, routeQuery) {
   return getNormalPath(`${props.basePath}/${routePath}`)
 }
 
-function hasTitle(title) {
+function hasTitle(title = '') {
   if (title.length > 5) {
     return title
   } else {
