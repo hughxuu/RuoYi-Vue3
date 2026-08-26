@@ -3,6 +3,7 @@ import { useWindowSize } from '@vueuse/core'
 import useAppStore from '@/store/modules/app'
 import useSettingsStore from '@/store/modules/settings'
 import { AppMain, Navbar, Settings, TagsView } from './components'
+import Sidebar from './components/Sidebar'
 
 const settingsStore = useSettingsStore()
 const theme = computed(() => settingsStore.theme)
@@ -64,7 +65,7 @@ function setLayout() {
       class="drawer-bg"
       @click="handleClickOutside"
     />
-    <sidebar v-if="!sidebar.hide" class="sidebar-container" />
+    <Sidebar v-if="!sidebar.hide" class="sidebar-container" />
     <div :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }" class="main-container">
       <div :class="{ 'fixed-header': fixedHeader }">
         <Navbar @set-layout="setLayout" />
