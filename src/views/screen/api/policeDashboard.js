@@ -76,7 +76,7 @@ export async function getDashboardData(params) {
     juvenile,
     specialPoliceUnits,
     cityBranchUnits
-  ] = await Promise.all([
+  ] = await Promise.allSettled([
     getAlarmKpi(params),
     getResultKpi(params),
     getMinorPie(params),
