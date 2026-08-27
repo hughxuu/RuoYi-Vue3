@@ -46,7 +46,7 @@ const setField = (key, value) => {
   <section
     class="flex min-h-screen-toolbar items-center gap-3 px-4 py-2 text-screen-text max-lg:flex-wrap max-md:h-auto"
   >
-    <div class="flex min-w-0 flex-1 flex-wrap items-center gap-3 max-md:w-full">
+    <div class="flex min-w-0 flex-1 flex-wrap items-center gap-5 max-md:w-full">
       <span class="whitespace-nowrap text-sm text-screen-muted">日期范围</span>
       <el-date-picker
         v-model="dateRange"
@@ -56,7 +56,7 @@ const setField = (key, value) => {
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         popper-class="screen-popper"
-        class="w-96 flex-none !bg-screen-input !shadow-none !ring-1 !ring-screen-border-soft max-lg:w-80 max-md:w-full [&_.el-range-input]:!bg-transparent [&_.el-range-input]:!text-screen-text [&_.el-range-separator]:!text-screen-muted [&_.el-input__icon]:!text-screen-muted"
+        class="w-64 flex-none !bg-screen-input !shadow-none !ring-1 !ring-screen-border-soft max-lg:w-72 max-md:w-full [&_.el-range-input]:!bg-transparent [&_.el-range-input]:!text-screen-text [&_.el-range-separator]:!text-screen-muted [&_.el-input__icon]:!text-screen-muted"
       />
       <span class="whitespace-nowrap text-sm text-screen-muted">基层单位</span>
       <el-select
