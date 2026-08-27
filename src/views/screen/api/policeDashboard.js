@@ -1,10 +1,9 @@
 import request from '@/utils/request'
-
-const screenUrl = endpoint => `/policeScreen/${endpoint}`
+import { UNIT_PARENT_IDS } from '../constant'
 
 export function getAlarmKpi(params) {
   return request({
-    url: screenUrl('getAlarmKpi'),
+    url: '/policeScreen/getAlarmKpi',
     method: 'post',
     data: params
   }).then(response => response.data)
@@ -12,7 +11,7 @@ export function getAlarmKpi(params) {
 
 export function getResultKpi(params) {
   return request({
-    url: screenUrl('getResultKpi'),
+    url: '/policeScreen/getResultKpi',
     method: 'post',
     data: params
   }).then(response => response.data)
@@ -20,7 +19,7 @@ export function getResultKpi(params) {
 
 export function getMinorPie(params) {
   return request({
-    url: screenUrl('getMinorPie'),
+    url: '/policeScreen/getMinorPie',
     method: 'post',
     data: params
   }).then(response => response.data)
@@ -28,7 +27,7 @@ export function getMinorPie(params) {
 
 export function getFugitiveTrend(params) {
   return request({
-    url: screenUrl('getFugitiveTrend'),
+    url: '/policeScreen/getFugitiveTrend',
     method: 'post',
     data: params
   }).then(response => response.data)
@@ -36,7 +35,7 @@ export function getFugitiveTrend(params) {
 
 export function getAlarmTrend(params) {
   return request({
-    url: screenUrl('getAlarmTrend'),
+    url: '/policeScreen/getAlarmTrend',
     method: 'post',
     data: params
   }).then(response => response.data)
@@ -44,7 +43,7 @@ export function getAlarmTrend(params) {
 
 export function getUnitRank(params) {
   return request({
-    url: screenUrl('getUnitRank'),
+    url: '/policeScreen/getUnitRank',
     method: 'post',
     data: params
   }).then(response => response.data)
@@ -52,7 +51,7 @@ export function getUnitRank(params) {
 
 export function getJuvenileTrend(params) {
   return request({
-    url: screenUrl('getJuvenileTrend'),
+    url: '/policeScreen/getJuvenileTrend',
     method: 'post',
     data: params
   }).then(response => response.data)
@@ -60,14 +59,24 @@ export function getJuvenileTrend(params) {
 
 export function getUnitOptions(params) {
   return request({
-    url: screenUrl('getUnitOptions'),
-    method: 'post',
-    data: params
+    url: '/system/dept/listByParentId',
+    method: 'get',
+    params
   }).then(response => response.data)
 }
 
 export async function getDashboardData(params) {
-  const [alarmKpi, result, pie, lineFugitive, lineAlarm, rank, juvenile, units] = await Promise.all([
+  const [
+    alarmKpi,
+    result,
+    pie,
+    lineFugitive,
+    lineAlarm,
+    rank,
+    juvenile,
+    specialPoliceUnits,
+    cityBranchUnits
+  ] = await Promise.all([
     getAlarmKpi(params),
     getResultKpi(params),
     getMinorPie(params),
@@ -75,7 +84,8 @@ export async function getDashboardData(params) {
     getAlarmTrend(params),
     getUnitRank(params),
     getJuvenileTrend(params),
-    getUnitOptions(params)
+    getUnitOptions({ parentId: UNIT_PARENT_IDS.specialPolice }),
+    getUnitOptions({ parentId: UNIT_PARENT_IDS.cityBranch })
   ])
 
   return {
@@ -87,6 +97,7 @@ export async function getDashboardData(params) {
     lineAlarm,
     rank,
     juvenile,
-    units
+    specialPoliceUnits,
+    cityBranchUnits
   }
 }

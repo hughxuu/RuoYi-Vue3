@@ -3,7 +3,7 @@ import request from '@/utils/request'
 
 /**
  * 接处警台账列表查询
- * @param {Object} queryParams
+ * @param {object} queryParams
  */
 export function listPoliceAlarm(queryParams) {
   return request({
@@ -15,36 +15,36 @@ export function listPoliceAlarm(queryParams) {
 
 /**
  * 根据id获取单条详情
- * @param {Number|Long} id
+ * @param {number | Long} id
  */
 export function getPoliceAlarm(id) {
   return request({
-    url: '/bussiness/policeAlarm/' + id,
+    url: `/bussiness/policeAlarm/${id}`,
     method: 'get'
   })
 }
 
 /**
  * 新增接处警台账
- * @param {Object} data
+ * @param {object} data
  */
 export function addPoliceAlarm(data) {
   return request({
     url: '/bussiness/policeAlarm',
     method: 'post',
-    data: data
+    data
   })
 }
 
 /**
  * 修改接处警台账
- * @param {Object} data
+ * @param {object} data
  */
 export function updatePoliceAlarm(data) {
   return request({
     url: '/bussiness/policeAlarm',
     method: 'put',
-    data: data
+    data
   })
 }
 
@@ -54,20 +54,20 @@ export function updatePoliceAlarm(data) {
  */
 export function delPoliceAlarm(id) {
   return request({
-    url: '/bussiness/policeAlarm/' + id,
+    url: `/bussiness/policeAlarm/${id}`,
     method: 'delete'
   })
 }
 
 /**
  * 导出
- * @param {Object} params
+ * @param {object} params
  */
 export function exportPoliceAlarm(params) {
   return request({
     url: '/bussiness/policeAlarm/export',
     method: 'get',
-    params: params,
+    params,
     responseType: 'blob'
   })
 }
@@ -91,7 +91,7 @@ export function importPoliceAlarm(data) {
   return request({
     url: '/bussiness/policeAlarm/importData',
     method: 'post',
-    data: data,
+    data,
     headers: {
       'Content-Type': 'multipart/form-data'
     }

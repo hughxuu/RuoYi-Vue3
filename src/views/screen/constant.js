@@ -9,6 +9,11 @@ export const CHART_OPTIONS = [
   { label: '柱状图', value: 'bar-line' }
 ]
 
+export const UNIT_PARENT_IDS = {
+  specialPolice: 101, // 特警支队单位
+  cityBranch: 102 // 全市分局单位
+}
+
 export const createInitialQuery = () => ({
   startDate: '2026-05-01',
   endDate: '2026-05-31',
@@ -77,7 +82,8 @@ export const createEmptyDashboard = () => ({
       wow: '-'
     }
   },
-  units: []
+  specialPoliceUnits: [],
+  cityBranchUnits: []
 })
 
 export const MINOR_LEVELS = [
