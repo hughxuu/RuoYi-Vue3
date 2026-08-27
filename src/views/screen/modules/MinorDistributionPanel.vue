@@ -65,7 +65,7 @@ const renderChart = () => {
     graphic: [
       {
         type: 'text',
-        left: '30%',
+        left: '24%',
         top: '42%',
         style: {
           text: total.value,
@@ -76,7 +76,7 @@ const renderChart = () => {
       },
       {
         type: 'text',
-        left: '30%',
+        left: '24%',
         top: '58%',
         style: {
           text: '总人数',

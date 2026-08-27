@@ -34,7 +34,7 @@ defineEmits(['fullscreen', 'export'])
         <h1
           class="m-0 text-[clamp(1.75rem,3vw,2.5rem)] font-extrabold tracking-[0.25rem] text-white drop-shadow-[0_0_12px_rgba(81,183,244,0.4)]"
         >
-          警务站每日工作统计大屏
+          街面群防治效
         </h1>
         <p class="mb-0 mt-1 text-xs tracking-[0.25rem] text-[#78a8c8] max-md:tracking-[0.25rem]">
           POLICE STATION DAILY WORK DATA CENTER
