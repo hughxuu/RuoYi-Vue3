@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import { UNIT_PARENT_IDS } from '../constant'
 
 export function getAlarmKpi(params) {
   return request({
@@ -63,41 +62,4 @@ export function getUnitOptions(params) {
     method: 'get',
     params
   }).then(response => response.data)
-}
-
-export async function getDashboardData(params) {
-  const [
-    alarmKpi,
-    result,
-    pie,
-    lineFugitive,
-    lineAlarm,
-    rank,
-    juvenile,
-    specialPoliceUnits,
-    cityBranchUnits
-  ] = await Promise.allSettled([
-    getAlarmKpi(params),
-    getResultKpi(params),
-    getMinorPie(params),
-    getFugitiveTrend(params),
-    getAlarmTrend(params),
-    getUnitRank(params),
-    getJuvenileTrend(params),
-    getUnitOptions({ parentId: UNIT_PARENT_IDS.specialPolice }),
-    getUnitOptions({ parentId: UNIT_PARENT_IDS.cityBranch })
-  ])
-
-  return {
-    updateTime: alarmKpi.updateTime,
-    alarmKpi,
-    result,
-    pie,
-    lineFugitive,
-    lineAlarm,
-    rank,
-    juvenile,
-    specialPoliceUnits,
-    cityBranchUnits
-  }
 }

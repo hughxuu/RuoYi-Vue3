@@ -2,11 +2,11 @@
 import { useFullscreen } from '@vueuse/core'
 import { saveAs } from 'file-saver'
 import { computed, onMounted, shallowRef } from 'vue'
-import { getDashboardData } from './api/policeDashboard'
 import ScreenHeader from './components/ScreenHeader.vue'
 
 import ScreenToolbar from './components/ScreenToolbar.vue'
-import { createEmptyDashboard, createInitialQuery } from './constant'
+import { useDashboardData } from './composables/useDashboardData'
+import { createInitialQuery } from './constant'
 import AlarmKpiPanel from './modules/AlarmKpiPanel.vue'
 import AlarmTrendPanel from './modules/AlarmTrendPanel.vue'
 import FugitiveTrendPanel from './modules/FugitiveTrendPanel.vue'
@@ -19,29 +19,17 @@ const screenRef = shallowRef(null)
 const { isFullscreen, toggle } = useFullscreen(screenRef, { autoExit: true })
 
 const query = shallowRef(createInitialQuery())
-const dashboard = shallowRef(createEmptyDashboard())
-const loading = shallowRef(false)
-const errorMessage = shallowRef('')
 const alarmChartType = shallowRef('line')
 const rankView = shallowRef('trend')
 const juvenileChartType = shallowRef('line')
+const { dashboard, errorMessage, isLoading: loading, reload, reloadMetrics } = useDashboardData()
 
 const specialPoliceUnitOptions = computed(() => dashboard.value.specialPoliceUnits)
 const cityBranchUnitOptions = computed(() => dashboard.value.cityBranchUnits)
 
-const loadData = async () => {
-  loading.value = true
-  errorMessage.value = ''
+const loadData = () => reloadMetrics(query.value)
 
-  try {
-    dashboard.value = await getDashboardData(query.value)
-  } catch (error) {
-    errorMessage.value = '数据加载失败，请稍后重试'
-    console.error('数据加载失败：', error)
-  } finally {
-    loading.value = false
-  }
-}
+const reloadAll = () => reload(query.value)
 
 const updateQuery = (value) => {
   query.value = value
@@ -117,7 +105,7 @@ const exportData = () => {
   saveAs(new Blob([csv], { type: 'text/csv;charset=utf-8' }), '警务站大屏数据.csv')
 }
 
-onMounted(loadData)
+onMounted(reloadAll)
 </script>
 
 <template>
@@ -149,7 +137,7 @@ onMounted(loadData)
         role="alert"
       >
         {{ errorMessage }}
-        <el-button text class="!m-0 !px-2 !text-red-100" size="small" @click="loadData">
+        <el-button text class="!m-0 !px-2 !text-red-100" size="small" @click="reloadAll">
           重新加载
         </el-button>
       </div>
