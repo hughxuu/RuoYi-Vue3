@@ -69,9 +69,9 @@ const setField = (key, value) => {
         <el-option label="全部单位" value="" />
         <el-option
           v-for="unit in unitOptions"
-          :key="unit.value"
-          :label="unit.label"
-          :value="unit.value"
+          :key="unit.deptId"
+          :label="unit.deptName"
+          :value="unit.deptId"
         />
       </el-select>
       <el-segmented
@@ -83,7 +83,7 @@ const setField = (key, value) => {
         @change="setField('period', $event)"
       />
     </div>
-    <div class="ml-auto flex shrink-0 gap-3 max-md:ml-0 max-md:w-full">
+    <div class="ml-auto flex shrink-0 max-md:ml-0 max-md:w-full">
       <el-button
         class="screen-action-button screen-action-button-primary"
         :loading="loading"

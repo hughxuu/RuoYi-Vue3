@@ -26,7 +26,8 @@ const alarmChartType = shallowRef('line')
 const rankView = shallowRef('trend')
 const juvenileChartType = shallowRef('line')
 
-const unitOptions = computed(() => dashboard.value.units)
+const specialPoliceUnitOptions = computed(() => dashboard.value.specialPoliceUnits)
+const cityBranchUnitOptions = computed(() => dashboard.value.cityBranchUnits)
 
 const loadData = async () => {
   loading.value = true
@@ -135,7 +136,7 @@ onMounted(loadData)
 
       <ScreenToolbar
         :model-value="query"
-        :unit-options="unitOptions"
+        :unit-options="specialPoliceUnitOptions"
         :loading="loading"
         @update:model-value="updateQuery"
         @submit="loadData"
@@ -184,7 +185,7 @@ onMounted(loadData)
           <UnitRankPanel
             :data="dashboard.rank"
             :period="query.period"
-            :unit-options="unitOptions"
+            :unit-options="cityBranchUnitOptions"
             :unit-name="query.unitName"
             :view="rankView"
             @update-unit="updateUnit"
@@ -196,7 +197,7 @@ onMounted(loadData)
             :data="dashboard.juvenile"
             :period="query.period"
             :chart-type="juvenileChartType"
-            :unit-options="unitOptions"
+            :unit-options="cityBranchUnitOptions"
             :unit-name="query.unitName"
             @change-period="updatePeriod"
             @change-chart="juvenileChartType = $event"

@@ -125,9 +125,9 @@ onMounted(renderChart)
           <el-option label="全部单位" value="" />
           <el-option
             v-for="unit in unitOptions"
-            :key="unit.value"
-            :label="unit.label"
-            :value="unit.value"
+            :key="unit.deptId"
+            :label="unit.deptName"
+            :value="unit.deptId"
           />
         </el-select>
         <div class="grid grid-cols-2 gap-2">
