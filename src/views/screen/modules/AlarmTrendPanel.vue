@@ -1,16 +1,12 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue'
+import ChartTypeToggle from '../components/ChartTypeToggle.vue'
 import ScreenPanel from '../components/ScreenPanel.vue'
-import { useECharts } from '../composables/useECharts'
-import { CHART_OPTIONS, PERIOD_OPTIONS } from '../constant'
+import { createDashboardTooltip, useECharts } from '../composables/useECharts'
 
 const props = defineProps({
   data: {
     type: Object,
-    required: true
-  },
-  period: {
-    type: String,
     required: true
   },
   chartType: {
@@ -19,14 +15,14 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['change-period', 'change-chart'])
+const emit = defineEmits(['change-chart'])
 
 const chartRef = ref(null)
 
 const { setOption } = useECharts(chartRef)
 
 const renderChart = () => {
-  const lineChatData = [
+  const lineChartData = [
     {
       name: '自接警数',
       type: 'line',
@@ -50,7 +46,7 @@ const renderChart = () => {
     }
   ]
 
-  const barChatData = [
+  const barChartData = [
     {
       name: '自接警数',
       type: 'bar',
@@ -87,17 +83,13 @@ const renderChart = () => {
       icon: 'roundRect',
       textStyle: { color: '#a8b4c1', fontSize: 12 }
     },
-    tooltip: {
-      trigger: 'axis',
-      backgroundColor: '#0a2235',
-      borderColor: '#1680ae',
-      textStyle: { color: '#d8e6f0' }
-    },
+    tooltip: createDashboardTooltip(),
     grid: {
       left: 48,
       right: 22,
-      top: 70,
-      bottom: 42
+      top: 46,
+      bottom: 34,
+      containLabel: true
     },
     xAxis: {
       data: props.data.xAxis,
@@ -132,7 +124,7 @@ const renderChart = () => {
         show: false
       }
     },
-    series: props.chartType === 'line' ? lineChatData : barChatData
+    series: props.chartType === 'line' ? lineChartData : barChartData
   })
 }
 
@@ -144,24 +136,7 @@ onMounted(renderChart)
 <template>
   <ScreenPanel title="接处警趋势变化" unit="(单位：起)">
     <template #actions>
-      <div class="screen-panel-action-stack">
-        <el-segmented
-          :model-value="period"
-          :options="PERIOD_OPTIONS"
-          aria-label="统计周期"
-          class="screen-segmented screen-segmented-period w-40"
-          size="default"
-          @change="emit('change-period', $event)"
-        />
-        <el-segmented
-          :model-value="chartType"
-          :options="CHART_OPTIONS"
-          aria-label="图表类型"
-          class="screen-segmented screen-segmented-chart w-44"
-          size="default"
-          @change="emit('change-chart', $event)"
-        />
-      </div>
+      <ChartTypeToggle :model-value="chartType" @update:model-value="emit('change-chart', $event)" />
     </template>
 
     <div ref="chartRef" class="min-h-0 flex-1 w-full" />

@@ -1,0 +1,129 @@
+.dashboard .dashboard-period {
+  --el-segmented-color: #a8b4c1;
+  --el-segmented-bg-color: #061b34;
+  --el-segmented-item-selected-color: #ffffff;
+  --el-segmented-item-selected-bg-color: #0750a2;
+  --el-segmented-item-hover-color: #ffffff;
+  --el-segmented-item-hover-bg-color: rgba(13, 79, 143, 0.68);
+  --el-segmented-item-active-bg-color: rgba(13, 79, 143, 0.88);
+  border: 1px solid rgba(20, 106, 170, 0.62) !important;
+  background-color: #061b34 !important;
+}
+
+.dashboard .dashboard-date-picker,
+.dashboard .dashboard-select {
+  --el-text-color-regular: #d8e9f6;
+  --el-text-color-placeholder: #93a9bd;
+  --el-border-color: rgba(20, 106, 170, 0.62);
+  --el-border-color-hover: #20b5f1;
+  --el-fill-color-blank: #061b34;
+}
+
+.dashboard :is(
+  .dashboard-date-picker .el-input__wrapper,
+  .dashboard-date-picker.el-range-editor,
+  .dashboard-select .el-select__wrapper
+) {
+  background-color: #061b34 !important;
+  box-shadow: 0 0 0 1px rgba(20, 106, 170, 0.62) inset !important;
+}
+
+.dashboard :is(
+  .dashboard-date-picker .el-input__wrapper:hover,
+  .dashboard-date-picker.el-range-editor:hover,
+  .dashboard-date-picker.el-range-editor.is-active,
+  .dashboard-select .el-select__wrapper:hover,
+  .dashboard-select .el-select__wrapper.is-focused
+) {
+  box-shadow: 0 0 0 1px #20b5f1 inset !important;
+}
+
+.dashboard :is(
+  .dashboard-date-picker .el-range-input,
+  .dashboard-date-picker .el-range-separator,
+  .dashboard-date-picker .el-range__icon,
+  .dashboard-date-picker .el-range__close-icon,
+  .dashboard-select .el-select__selected-item,
+  .dashboard-select .el-select__placeholder,
+  .dashboard-select .el-select__caret
+) {
+  color: #d8e9f6 !important;
+}
+
+.dashboard .dashboard-action-button {
+  border-color: rgba(20, 106, 170, 0.62) !important;
+  background-color: #061b34 !important;
+  color: #d8e9f6 !important;
+}
+
+.dashboard .dashboard-action-button-primary {
+  border-color: #1478ba !important;
+  background: linear-gradient(180deg, #0c3865, #06203d) !important;
+}
+
+.dashboard-popper {
+  --el-bg-color-overlay: #061b34;
+  --el-fill-color-light: #0a2945;
+  --el-text-color-regular: #d8e9f6;
+  --el-text-color-placeholder: #71869a;
+  --el-border-color-light: rgba(20, 106, 170, 0.62);
+  --el-border-color-lighter: rgba(20, 106, 170, 0.62);
+  --el-color-primary: #20b5f1;
+}
+
+.dashboard-popper.el-popper,
+.dashboard-popper :is(.el-picker-panel, .el-date-picker, .el-date-range-picker, .el-select-dropdown) {
+  border-color: #1478ba !important;
+  background-color: #061b34 !important;
+  color: #d8e9f6;
+}
+
+.dashboard-popper.el-popper {
+  border: 1px solid #1478ba !important;
+}
+
+.dashboard-popper.el-popper .el-popper__arrow::before {
+  border-color: #1478ba;
+  background-color: #061b34 !important;
+}
+
+.dashboard-popper :is(.el-date-picker, .el-date-range-picker) {
+  --el-datepicker-bg-color: #061b34;
+  --el-datepicker-text-color: #d8e9f6;
+  --el-datepicker-off-text-color: #71869a;
+  --el-datepicker-header-text-color: #a8b4c1;
+  --el-datepicker-icon-color: #d8e9f6;
+  --el-datepicker-border-color: rgba(20, 106, 170, 0.62);
+  --el-datepicker-inner-border-color: rgba(20, 106, 170, 0.62);
+  --el-datepicker-inrange-bg-color: rgba(13, 122, 209, 0.28);
+  --el-datepicker-inrange-hover-bg-color: rgba(13, 122, 209, 0.44);
+  --el-datepicker-active-color: #20b5f1;
+  --el-datepicker-hover-text-color: #20b5f1;
+  --el-fill-color-blank: #061b34;
+}
+
+.dashboard-popper :is(.el-picker-panel__content, .el-date-range-picker__content) {
+  background-color: #061b34;
+}
+
+.dashboard-popper :is(
+  .el-date-picker__header--bordered,
+  .el-date-picker__time-header,
+  .el-picker-panel__footer,
+  .el-date-range-picker__content.is-left
+) {
+  border-color: rgba(20, 106, 170, 0.62);
+}
+
+.dashboard-popper :is(
+  .el-date-table td.in-range .el-date-table-cell,
+  .el-month-table td.in-range .el-date-table-cell,
+  .el-year-table td.in-range .el-date-table-cell
+) {
+  background-color: rgba(13, 122, 209, 0.28);
+}
+
+.dashboard-popper .el-select-dropdown__item:is(.is-hovering, .is-selected) {
+  background-color: #0d4f8f;
+  color: #ffffff;
+}

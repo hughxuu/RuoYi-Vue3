@@ -1,4 +1,5 @@
 <script setup>
+import AnimatedStatistic from './AnimatedStatistic.vue'
 import TrendValue from './TrendValue.vue'
 
 defineProps({
@@ -15,12 +16,12 @@ defineProps({
     default: ''
   },
   value: {
-    type: String,
-    required: true
+    type: [String, Number],
+    default: '-'
   },
   rate: {
-    type: String,
-    required: true
+    type: [String, Number],
+    default: '-'
   },
   up: {
     type: Boolean,
@@ -35,30 +36,30 @@ defineProps({
 
 <template>
   <article
-    class="min-w-0 rounded border border-screen-border-soft bg-black/10 px-1 py-2 text-center"
+    class="flex h-full min-h-0 min-w-0 flex-col items-center justify-center overflow-hidden rounded-md border border-line-muted bg-surface-kpi px-2 py-3 text-center shadow-[inset_0_0_1rem_rgba(39,137,211,0.08)]"
   >
     <div
       :class="{
-        'text-screen-cyan': tone === 'cyan',
-        'text-screen-orange': tone === 'orange',
-        'text-screen-yellow': tone === 'yellow',
+        'text-accent': tone === 'cyan',
+        'text-chart-orange': tone === 'orange',
+        'text-chart-yellow': tone === 'yellow',
       }"
-      class="mx-auto grid h-11 w-11 place-items-center rounded-full bg-[radial-gradient(circle,_#174b69,_#103246)] text-2xl shadow-[0_0_1rem_rgba(31,172,235,0.18)]"
+      class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-[radial-gradient(circle,_#174b69,_#103246)] text-2xl shadow-[0_0_1rem_rgba(31,172,235,0.18)]"
     >
       <component :is="icon" class="h-6 w-6" />
     </div>
-    <div class="mt-2 text-xs text-slate-300">
+    <div class="mt-3 min-h-10 text-sm leading-5 text-slate-300">
       {{ label }}
-      <small v-if="sub" class="block text-xs">{{ sub }}</small>
+      <small v-if="sub" class="block text-xs text-muted">{{ sub }}</small>
     </div>
-    <strong class="block text-2xl leading-9 text-white">{{ value }}</strong>
-    <div class="whitespace-nowrap text-xs text-screen-muted">
+    <AnimatedStatistic class="mt-2 block text-3xl leading-9 text-white" :value="value" />
+    <div class="mt-1 whitespace-nowrap text-xs text-muted">
       较昨日
       <TrendValue
         :value="rate"
         :up="up"
         show-direction
-        :class="up ? 'font-bold text-screen-red' : 'font-bold text-screen-lime'"
+        :class="up ? 'font-bold text-chart-red' : 'font-bold text-success'"
       />
     </div>
   </article>

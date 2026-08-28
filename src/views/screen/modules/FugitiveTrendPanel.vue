@@ -1,15 +1,12 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue'
 import ScreenPanel from '../components/ScreenPanel.vue'
-import { useECharts } from '../composables/useECharts'
-import { PERIOD_OPTIONS } from '../constant'
+import { createDashboardTooltip, useECharts } from '../composables/useECharts'
 
 const props = defineProps({
-  data: { type: Object, required: true },
-  period: { type: String, required: true }
+  data: { type: Object, required: true }
 })
 
-const emit = defineEmits(['change-period'])
 const chartRef = ref(null)
 const { setOption } = useECharts(chartRef)
 
@@ -25,13 +22,8 @@ const renderChart = () => {
       icon: 'roundRect',
       textStyle: { color: '#a8b4c1', fontSize: 12 }
     },
-    tooltip: {
-      trigger: 'axis',
-      backgroundColor: '#0a2235',
-      borderColor: '#1680ae',
-      textStyle: { color: '#d8e6f0' }
-    },
-    grid: { left: 48, right: 22, top: 58, bottom: 42 },
+    tooltip: createDashboardTooltip(),
+    grid: { left: 48, right: 22, top: 46, bottom: 34, containLabel: true },
     xAxis: {
       data: props.data.xAxis,
       axisLine: { lineStyle: { color: '#38536a' } },
@@ -90,16 +82,6 @@ onMounted(renderChart)
 
 <template>
   <ScreenPanel title="网逃数据趋势变化" unit="(单位：人)">
-    <template #actions>
-      <el-segmented
-        :model-value="period"
-        :options="PERIOD_OPTIONS"
-        aria-label="统计周期"
-        class="screen-segmented screen-segmented-period w-40"
-        size="default"
-        @change="emit('change-period', $event)"
-      />
-    </template>
-    <div ref="chartRef" class="h-full min-h-0 w-full" />
+    <div ref="chartRef" class="min-h-0 flex-1 w-full" />
   </ScreenPanel>
 </template>
