@@ -22,7 +22,7 @@ const rawValue = computed(() => typeof props.value === 'number' ? props.value.to
 const hasDirection = computed(() => /^[↑↓]/.test(rawValue.value))
 const shouldShowDirection = computed(() => hasDirection.value || (props.showDirection && rawValue.value !== '-'))
 const isUp = computed(() => rawValue.value.startsWith('↓') ? false : rawValue.value.startsWith('↑') ? true : props.up)
-const displayValue = computed(() => rawValue.value.replace(/^[↑↓]\s*/, ''))
+const displayValue = computed(() => typeof rawValue.value === 'string' ? rawValue.value.replace(/^[↑↓]\s*/, '') : rawValue.value)
 </script>
 
 <template>

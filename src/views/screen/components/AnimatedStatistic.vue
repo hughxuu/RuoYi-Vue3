@@ -28,11 +28,12 @@ const props = defineProps({
 })
 
 const rawValue = computed(() => typeof props.value === 'number' ? props.value.toString() : props.value)
-const normalizedValue = computed(() => rawValue.value.replace(/[↑↓,%\s]/g, ''))
+const normalizedValue = computed(() => typeof rawValue.value === 'string' ? rawValue.value?.replace(/^[↑↓]\s*/, '') : rawValue.value)
+
 const numericValue = computed(() => {
   if (!normalizedValue.value || normalizedValue.value === '-') return null
-  const value = Number.parseFloat(normalizedValue.value.replaceAll(',', ''))
-  return Number.isFinite(value) ? value : null
+  const value = Number.parseFloat(normalizedValue.value?.replaceAll(',', ''))
+  return Number.isFinite(value) ? normalizedValue.value : null
 })
 const decimalLength = computed(() => normalizedValue.value.split('.')[1]?.length || 0)
 const statisticPrecision = computed(() => props.precision ?? decimalLength.value)

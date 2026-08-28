@@ -153,10 +153,10 @@ onMounted(renderChart)
     <div ref="chartRef" class="min-h-0 flex-1 w-full" />
 
     <div class="grid shrink-0 grid-cols-4 gap-1 px-3 pb-2">
-      <StatItem label="本月累计" :value="data.stats.monthTotal" />
-      <StatItem label="较上月" :value="data.stats.lastMonth" tone="red" />
-      <StatItem label="同比去年" :value="data.stats.yoy" tone="green" />
-      <StatItem label="环比上周" :value="data.stats.wow" tone="red" />
+      <StatItem label="本月累计" :value="data.stats?.monthTotal" />
+      <StatItem label="较上月" :value="data.stats?.lastMonth" tone="red" />
+      <StatItem label="同比去年" :value="data.stats?.yoy" tone="green" />
+      <StatItem label="环比上周" :value="data.stats?.wow" tone="red" />
     </div>
   </ScreenPanel>
 </template>

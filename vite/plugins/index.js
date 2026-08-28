@@ -1,12 +1,11 @@
-import vue from '@vitejs/plugin-vue'
-
+import vue  from '@vitejs/plugin-vue'
 import { createPoliceDashboardMock } from '../mocks/police-dashboard'
 import createAutoImport from './auto-import'
 import createCompression from './compression'
 import createSetupExtend from './setup-extend'
 import createSvgIcon from './svg-icon'
 
-export function createVitePlugins(viteEnv, isBuild = false) {
+export default function createVitePlugins(viteEnv, isBuild = false) {
   const vitePlugins = [vue()]
   vitePlugins.push(createAutoImport())
   vitePlugins.push(createSetupExtend())

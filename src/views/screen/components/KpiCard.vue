@@ -4,7 +4,7 @@ import TrendValue from './TrendValue.vue'
 
 defineProps({
   icon: {
-    type: Object,
+    type: String,
     required: true
   },
   title: {
