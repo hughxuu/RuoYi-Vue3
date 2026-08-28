@@ -1,11 +1,12 @@
 <script setup>
 import { ArrowDown, ArrowUp } from '@lucide/vue'
 import { computed } from 'vue'
+import AnimatedStatistic from './AnimatedStatistic.vue'
 
 const props = defineProps({
   value: {
-    type: String,
-    required: true
+    type: [String, Number],
+    default: '-'
   },
   up: {
     type: Boolean,
@@ -17,21 +18,21 @@ const props = defineProps({
   }
 })
 
-const hasDirection = computed(() => /^[↑↓]/.test(props.value))
-const isUp = computed(() =>
-  props.value.startsWith('↓') ? false : props.value.startsWith('↑') ? true : props.up
-)
-const displayValue = computed(() => props.value.replace(/^[↑↓]\s*/, ''))
+const rawValue = computed(() => typeof props.value === 'number' ? props.value.toString() : props.value)
+const hasDirection = computed(() => /^[↑↓]/.test(rawValue.value))
+const shouldShowDirection = computed(() => hasDirection.value || (props.showDirection && rawValue.value !== '-'))
+const isUp = computed(() => rawValue.value.startsWith('↓') ? false : rawValue.value.startsWith('↑') ? true : props.up)
+const displayValue = computed(() => rawValue.value.replace(/^[↑↓]\s*/, ''))
 </script>
 
 <template>
-  <span class="inline-flex items-center gap-1 whitespace-nowrap">
+  <div class="inline-flex items-center gap-1 whitespace-nowrap">
     <component
       :is="isUp ? ArrowUp : ArrowDown"
-      v-if="hasDirection || showDirection"
+      v-if="shouldShowDirection"
       :size="18"
       :stroke-width="3"
     />
-    <span>{{ displayValue }}</span>
-  </span>
+    <AnimatedStatistic :value="displayValue" />
+  </div>
 </template>

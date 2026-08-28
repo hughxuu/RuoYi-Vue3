@@ -90,6 +90,9 @@ export function useDashboardData() {
   // 青少年数据趋势
   const loadJuvenile = params => loadModule('juvenile', () => getJuvenileTrend(params), juvenile => ({ juvenile }))
 
+  const reloadRank = params => loadRank(params)
+  const reloadJuvenile = params => loadJuvenile(params)
+
   // 特警单位列表
   const loadSpecialPoliceUnits = () => loadModule('specialPoliceUnits', () => getUnitOptions({ parentId: UNIT_PARENT_IDS.specialPolice }), specialPoliceUnits => ({ specialPoliceUnits }))
 
@@ -97,19 +100,19 @@ export function useDashboardData() {
   const loadCityBranchUnits = () => loadModule('cityBranchUnits', () => getUnitOptions({ parentId: UNIT_PARENT_IDS.cityBranch }), cityBranchUnits => ({ cityBranchUnits }))
 
   // 重新加载指标数据
-  const reloadMetrics = (params) => {
+  const reloadMetrics = (params, panelParams = {}) => {
     void loadAlarmKpi(params)
     void loadResult(params)
     void loadPie(params)
     void loadLineFugitive(params)
     void loadLineAlarm(params)
-    void loadRank(params)
-    void loadJuvenile(params)
+    void reloadRank(panelParams.rank || params)
+    void reloadJuvenile(panelParams.juvenile || params)
   }
 
   // 重新加载所有数据
-  const reload = (params) => {
-    reloadMetrics(params)
+  const reload = (params, panelParams = {}) => {
+    reloadMetrics(params, panelParams)
     void loadSpecialPoliceUnits()
     void loadCityBranchUnits()
   }
@@ -119,6 +122,8 @@ export function useDashboardData() {
     errorMessage,
     isLoading,
     reload,
-    reloadMetrics
+    reloadJuvenile,
+    reloadMetrics,
+    reloadRank
   }
 }

@@ -4,19 +4,26 @@ export const PERIOD_OPTIONS = [
   { label: '月', value: 'month' }
 ]
 
-export const CHART_OPTIONS = [
-  { label: '折线图', value: 'line' },
-  { label: '柱状图', value: 'bar-line' }
-]
-
 export const UNIT_PARENT_IDS = {
   specialPolice: 101, // 特警支队单位
   cityBranch: 102 // 全市分局单位
 }
 
+const getCurrentMonthRange = () => {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = today.getMonth()
+  const monthText = String(month + 1).padStart(2, '0')
+  const lastDay = String(new Date(year, month + 1, 0).getDate()).padStart(2, '0')
+
+  return {
+    startDate: `${year}-${monthText}-01`,
+    endDate: `${year}-${monthText}-${lastDay}`
+  }
+}
+
 export const createInitialQuery = () => ({
-  startDate: '2026-05-01',
-  endDate: '2026-05-31',
+  ...getCurrentMonthRange(),
   unitName: '',
   period: 'day'
 })
@@ -90,26 +97,26 @@ export const MINOR_LEVELS = [
   {
     key: 'red',
     label: '红标',
-    colorClass: 'bg-screen-pie-red'
+    colorClass: 'bg-category-red'
   },
   {
     key: 'orange',
     label: '橙标',
-    colorClass: 'bg-screen-pie-orange'
+    colorClass: 'bg-category-orange'
   },
   {
     key: 'yellow',
     label: '黄标',
-    colorClass: 'bg-screen-pie-yellow'
+    colorClass: 'bg-category-yellow'
   },
   {
     key: 'blue',
     label: '蓝标',
-    colorClass: 'bg-screen-pie-blue'
+    colorClass: 'bg-category-blue'
   },
   {
     key: 'gray',
     label: '黑标',
-    colorClass: 'bg-screen-pie-gray'
+    colorClass: 'bg-category-gray'
   }
 ]

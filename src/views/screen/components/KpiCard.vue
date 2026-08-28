@@ -1,4 +1,5 @@
 <script setup>
+import AnimatedStatistic from './AnimatedStatistic.vue'
 import TrendValue from './TrendValue.vue'
 
 defineProps({
@@ -11,16 +12,16 @@ defineProps({
     required: true
   },
   value: {
-    type: String,
-    required: true
+    type: [String, Number],
+    default: '-'
   },
   note: {
     type: String,
     default: '较昨日'
   },
   rate: {
-    type: String,
-    required: true
+    type: [String, Number],
+    default: '-'
   },
   up: {
     type: Boolean,
@@ -35,30 +36,30 @@ defineProps({
 
 <template>
   <article
-    class="grid min-h-0 min-w-0 grid-cols-[auto_1fr] items-center gap-2 rounded border border-screen-border-soft bg-screen-kpi px-2 py-1 shadow-[inset_0_0_1rem_rgba(39,137,211,0.08)]"
+    class="relative grid h-full min-h-0 min-w-0 grid-cols-[auto_1fr] items-center gap-3 overflow-hidden rounded-md border border-line-muted bg-surface-kpi px-3 py-2 shadow-[inset_0_0_1rem_rgba(39,137,211,0.08)]"
   >
     <div
       :class="{
-        'text-screen-cyan': tone === 'cyan',
+        'text-accent': tone === 'cyan',
         'text-violet-300': tone === 'violet',
-        'text-screen-green': tone === 'green',
+        'text-chart-green': tone === 'green',
       }"
-      class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[radial-gradient(circle,_#174b69,_#103246)] text-xl shadow-[0_0_1rem_rgba(31,172,235,0.18)]"
+      class="grid size-11 shrink-0 place-items-center rounded-full bg-[radial-gradient(circle,_#174b69,_#103246)] text-xl shadow-[0_0_1rem_rgba(31,172,235,0.18)]"
     >
       <component :is="icon" class="h-6 w-6" :stroke-width="2.5" />
     </div>
     <div class="min-w-0">
-      <div class="text-xs leading-4 text-slate-300">
+      <div class="text-sm leading-5 text-slate-300">
         {{ title }}
       </div>
-      <strong class="block text-2xl leading-7 tracking-wider text-white">{{ value }}</strong>
-      <div class="flex items-center gap-1 whitespace-nowrap text-xs leading-4 text-screen-muted">
+      <AnimatedStatistic class="block text-3xl leading-8 tracking-wider text-white" :value="value" />
+      <div class="mt-1 flex items-center gap-1 whitespace-nowrap text-xs leading-4 text-muted">
         {{ note }}
         <TrendValue
           :value="rate"
           :up="up"
           show-direction
-          :class="up ? 'font-bold text-screen-red' : 'font-bold text-screen-lime'"
+          :class="up ? 'font-bold text-chart-red' : 'font-bold text-success'"
         />
       </div>
     </div>
