@@ -1,5 +1,4 @@
-import vue from '@vitejs/plugin-vue'
-
+import vue  from '@vitejs/plugin-vue'
 import { createPoliceDashboardMock } from '../mocks/police-dashboard'
 import createAutoImport from './auto-import'
 import createCompression from './compression'
