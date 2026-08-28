@@ -4,7 +4,6 @@ import AnimatedStatistic from '../components/AnimatedStatistic.vue'
 import ScreenPanel from '../components/ScreenPanel.vue'
 import TrendValue from '../components/TrendValue.vue'
 import { createDashboardTooltip, useECharts } from '../composables/useECharts'
-import { MINOR_LEVELS } from '../constant'
 
 const props = defineProps({
   data: {
@@ -16,9 +15,8 @@ const props = defineProps({
 const chartRef = ref(null)
 const { setOption } = useECharts(chartRef)
 
-const total = computed(() =>
-  MINOR_LEVELS.reduce((sum, item) => sum + (props.data[item.key] || 0), 0)
-)
+const pieData = computed(() => props.data.dataList || [])
+const total = computed(() => props.data.total ?? pieData.value.reduce((sum, item) => sum + (item.value || 0), 0))
 
 const hasData = computed(() => total.value > 0)
 
@@ -36,9 +34,9 @@ const renderChart = () => {
       itemGap: 10,
       textStyle: { color: '#cbd7df', fontSize: 12 },
       formatter: (name) => {
-        const level = MINOR_LEVELS.find(item => item.label === name)
-        const value = level ? props.data[level.key] || 0 : 0
-        return `${name}  ${value} (${percentage(value)})`
+        const item = pieData.value.find(({ name: itemName }) => itemName === name)
+        const value = item?.value || 0
+        return `${name}  ${value} (${item?.percent || percentage(value)})`
       }
     },
     tooltip: createDashboardTooltip('item'),
@@ -62,10 +60,7 @@ const renderChart = () => {
           lineStyle: { color: '#607080' }
         },
         itemStyle: { borderColor: '#041a31', borderWidth: 2 },
-        data: MINOR_LEVELS.map(item => ({
-          value: props.data[item.key],
-          name: item.label
-        }))
+        data: pieData.value
       }
     ]
   })
@@ -87,7 +82,7 @@ onMounted(renderChart)
 
     <div class="flex h-9 shrink-0 items-center justify-center gap-2 border-t border-line-muted/60 bg-black/10 text-sm text-muted">
       <span>较昨日</span>
-      <TrendValue :value="data.dayChange" class="font-bold text-2xl text-success" />
+      <TrendValue :value="data.ratioCompareYesterday" class="font-bold text-2xl text-success" />
     </div>
   </ScreenPanel>
 </template>

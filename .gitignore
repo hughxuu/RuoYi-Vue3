@@ -18,6 +18,7 @@ selenium-debug.log
 *.njsproj
 *.sln
 *.local
+.worma-cache/
 
 package-lock.json
 yarn.lock

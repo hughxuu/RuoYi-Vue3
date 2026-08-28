@@ -31,13 +31,12 @@ const rawValue = computed(() => typeof props.value === 'number' ? props.value.to
 const normalizedValue = computed(() => typeof rawValue.value === 'string' ? rawValue.value?.replace(/^[↑↓]\s*/, '') : rawValue.value)
 
 const numericValue = computed(() => {
-  if (!normalizedValue.value || normalizedValue.value === '-') return null
-  const value = Number.parseFloat(normalizedValue.value?.replaceAll(',', ''))
-  return Number.isFinite(value) ? normalizedValue.value : null
+  const value = Number.parseFloat(normalizedValue.value?.replaceAll(',', '') ?? '')
+  return Number.isFinite(value) ? value : null
 })
-const decimalLength = computed(() => normalizedValue.value.split('.')[1]?.length || 0)
+const decimalLength = computed(() => normalizedValue.value?.split('.')[1]?.length || 0)
 const statisticPrecision = computed(() => props.precision ?? decimalLength.value)
-const statisticSuffix = computed(() => props.suffix || (rawValue.value.includes('%') ? '%' : ''))
+const statisticSuffix = computed(() => props.suffix || (rawValue.value?.includes('%') ? '%' : ''))
 const statisticRootStyle = {
   '--el-statistic-content-color': 'inherit',
   '--el-statistic-content-font-size': 'inherit',

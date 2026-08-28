@@ -2,7 +2,6 @@
 import { onMounted, ref, watch } from 'vue'
 import ChartTypeToggle from '../components/ChartTypeToggle.vue'
 import ScreenPanel from '../components/ScreenPanel.vue'
-import StatItem from '../components/StatItem.vue'
 import { createDashboardTooltip, useECharts } from '../composables/useECharts'
 
 const props = defineProps({
@@ -10,7 +9,7 @@ const props = defineProps({
   monthRange: { type: Array, default: null },
   chartType: { type: String, required: true },
   unitOptions: { type: Array, default: () => [] },
-  unitName: { type: String, default: '' }
+  deptId: { type: [String, Number], default: '全部单位' }
 })
 
 const emit = defineEmits(['change-month-range', 'change-chart', 'update-unit'])
@@ -18,60 +17,45 @@ const chartRef = ref(null)
 const { setOption } = useECharts(chartRef)
 
 const renderChart = () => {
+  const dataList = props.data.data || []
+  const colors = ['#6b96e8', '#86c75b']
   const lineChartData = [
     {
-      name: '自接警数',
+      name: '未成年犯罪案件数',
       type: 'line',
       smooth: true,
       symbol: 'circle',
       symbolSize: 5,
-      data: props.data.self,
-      lineStyle: { width: 2, color: '#6b96e8' },
-      itemStyle: { color: '#6b96e8' }
+      data: dataList.map(item => item.minorCaseCount || 0),
+      lineStyle: { width: 2, color: colors[0] },
+      itemStyle: { color: colors[0] }
     },
     {
-      name: '转警数',
+      name: '涉未成年人数',
       type: 'line',
       smooth: true,
       symbol: 'circle',
       symbolSize: 5,
-      data: props.data.transfer,
-      lineStyle: { width: 2, color: '#86c75b' },
-      itemStyle: { color: '#86c75b' }
-    },
-    {
-      name: '110派警数',
-      type: 'line',
-      smooth: true,
-      symbol: 'circle',
-      symbolSize: 5,
-      data: props.data.dispatch,
-      lineStyle: { width: 2, color: '#f2b841' },
-      itemStyle: { color: '#f2b841' }
+      data: dataList.map(item => item.minorPerson || 0),
+      lineStyle: { width: 2, color: colors[1] },
+      itemStyle: { color: colors[1] }
     }
   ]
 
   const barChartData = [
     {
-      name: '自接警数',
+      name: '未成年犯罪案件数',
       type: 'bar',
       barWidth: 7,
-      data: props.data.self,
-      itemStyle: { color: '#6b96e8' }
+      data: dataList.map(item => item.minorCaseCount || 0),
+      itemStyle: { color: colors[0] }
     },
     {
-      name: '转警数',
+      name: '涉未成年人数',
       type: 'bar',
       barWidth: 7,
-      data: props.data.transfer,
-      itemStyle: { color: '#86c75b' }
-    },
-    {
-      name: '110派警数',
-      type: 'bar',
-      barWidth: 7,
-      data: props.data.dispatch,
-      itemStyle: { color: '#f2b841' }
+      data: dataList.map(item => item.minorPerson || 0),
+      itemStyle: { color: colors[1] }
     }
   ]
 
@@ -88,7 +72,7 @@ const renderChart = () => {
     tooltip: createDashboardTooltip(),
     grid: { left: 42, right: 18, top: 46, bottom: 34, containLabel: true },
     xAxis: {
-      data: props.data.xAxis,
+      data: dataList.map(item => item.statDate),
       axisLabel: { color: '#a8b4c1', interval: 3 },
       axisLine: { lineStyle: { color: '#38536a' } },
       axisTick: { show: false }
@@ -136,24 +120,17 @@ onMounted(renderChart)
       <el-select
         popper-class="dashboard-popper"
         class="dashboard-select min-w-0 flex-1"
-        :model-value="unitName"
+        :model-value="deptId"
         clearable
         size="small"
         placeholder="全部单位"
         @update:model-value="emit('update-unit', $event)"
       >
-        <el-option label="全部单位" value="" />
-        <el-option v-for="{ deptId, deptName } in unitOptions" :key="deptId" :label="deptName" :value="deptId" />
+        <el-option label="全部单位" value="全部单位" />
+        <el-option v-for="unit in unitOptions" :key="unit.deptId" :label="unit.deptName" :value="unit.deptId" />
       </el-select>
     </div>
 
     <div ref="chartRef" class="min-h-0 flex-1 w-full" />
-
-    <div class="grid shrink-0 grid-cols-4 gap-1 px-3 pb-2">
-      <StatItem label="本月累计" :value="data.stats?.monthTotal" />
-      <StatItem label="较上月" :value="data.stats?.lastMonth" tone="green" />
-      <StatItem label="同比去年" :value="data.stats?.yoy" tone="green" />
-      <StatItem label="环比上周" :value="data.stats?.wow" tone="red" />
-    </div>
   </ScreenPanel>
 </template>

@@ -35,11 +35,13 @@ const createInitialMonthRange = () => [
 ]
 const rankFilter = shallowRef({
   monthRange: createInitialMonthRange(),
-  unitName: ''
+  deptId: '全部单位',
+  deptName: '全部单位'
 })
 const juvenileFilter = shallowRef({
   monthRange: createInitialMonthRange(),
-  unitName: ''
+  deptId: '全部单位',
+  deptName: '全部单位'
 })
 
 const specialPoliceUnitOptions = computed(() => dashboard.value.specialPoliceUnits)
@@ -61,10 +63,12 @@ const toMonthDateRange = (monthRange) => {
 
 const createPanelQuery = filter => ({
   ...query.value,
+  statType: 'month',
   ...(filter.monthRange?.length === 2 && filter.monthRange.every(Boolean)
     ? toMonthDateRange(filter.monthRange)
     : {}),
-  unitName: filter.unitName
+  deptId: filter.deptId,
+  deptName: filter.deptName
 })
 
 const getPanelParams = () => ({
@@ -74,6 +78,17 @@ const getPanelParams = () => ({
 
 const updatePanelFilter = (filter, key, value, reloadPanel) => {
   const nextFilter = { ...filter.value, [key]: value }
+  filter.value = nextFilter
+  void reloadPanel(createPanelQuery(nextFilter))
+}
+
+const updatePanelUnit = (filter, deptId, unitOptions, reloadPanel) => {
+  const selectedUnit = unitOptions.value.find(unit => unit.deptId === deptId)
+  const nextFilter = {
+    ...filter.value,
+    deptId: deptId || '全部单位',
+    deptName: selectedUnit?.deptName || '全部单位'
+  }
   filter.value = nextFilter
   void reloadPanel(createPanelQuery(nextFilter))
 }
@@ -89,8 +104,8 @@ const updateRankMonthRange = (monthRange) => {
   }
 }
 
-const updateRankUnit = (unitName) => {
-  updatePanelFilter(rankFilter, 'unitName', unitName ?? '', reloadRank)
+const updateRankUnit = (deptId) => {
+  updatePanelUnit(rankFilter, deptId, cityBranchUnitOptions, reloadRank)
 }
 
 const updateJuvenileMonthRange = (monthRange) => {
@@ -104,8 +119,8 @@ const updateJuvenileMonthRange = (monthRange) => {
   }
 }
 
-const updateJuvenileUnit = (unitName) => {
-  updatePanelFilter(juvenileFilter, 'unitName', unitName ?? '', reloadJuvenile)
+const updateJuvenileUnit = (deptId) => {
+  updatePanelUnit(juvenileFilter, deptId, cityBranchUnitOptions, reloadJuvenile)
 }
 
 const loadData = () => reloadMetrics(query.value, getPanelParams())
@@ -128,44 +143,44 @@ const exportData = () => {
     [
       '接处警数据',
       '总数',
-      dashboard.value.alarmKpi.total.value,
-      dashboard.value.alarmKpi.total.rate
+      dashboard.value.alarmKpi.totalAlarm,
+      dashboard.value.alarmKpi.totalAlarmRatio
     ],
     [
       '接处警数据',
       '自接警数据',
-      dashboard.value.alarmKpi.selfAlarm.value,
-      dashboard.value.alarmKpi.selfAlarm.rate
+      dashboard.value.alarmKpi.selfAlarm,
+      dashboard.value.alarmKpi.selfAlarmRatio
     ],
     [
       '接处警数据',
       '转警数据',
-      dashboard.value.alarmKpi.transfer.value,
-      dashboard.value.alarmKpi.transfer.rate
+      dashboard.value.alarmKpi.transferAlarm,
+      dashboard.value.alarmKpi.transferAlarmRatio
     ],
     [
       '接处警数据',
       '110派警',
-      dashboard.value.alarmKpi.dispatch110.value,
-      dashboard.value.alarmKpi.dispatch110.rate
+      dashboard.value.alarmKpi.policeDispatch,
+      dashboard.value.alarmKpi.policeDispatchRatio
     ],
     [
       '战果类数据',
       '抓获网逃数',
-      dashboard.value.result.fugitive.value,
-      dashboard.value.result.fugitive.rate
+      dashboard.value.result.netFugitiveCount,
+      dashboard.value.result.netFugitiveRatio
     ],
     [
       '战果类数据',
       '抓获团伙数',
-      dashboard.value.result.gang.value,
-      dashboard.value.result.gang.rate
+      dashboard.value.result.gangCount,
+      dashboard.value.result.gangRatio
     ],
     [
       '战果类数据',
       '抓获现行',
-      dashboard.value.result.current.value,
-      dashboard.value.result.current.rate
+      dashboard.value.result.currentArrestMinor,
+      dashboard.value.result.currentArrestMinorRatio
     ]
   ]
   const csv = `\ufeff${rows.map(row => row.map(escapeCsvValue).join(',')).join('\n')}`
@@ -226,7 +241,7 @@ onMounted(reloadAll)
             :data="dashboard.rank"
             :month-range="rankFilter.monthRange"
             :unit-options="cityBranchUnitOptions"
-            :unit-name="rankFilter.unitName"
+            :dept-id="rankFilter.deptId"
             :chart-type="rankChartType"
             @update-unit="updateRankUnit"
             @change-month-range="updateRankMonthRange"
@@ -238,7 +253,7 @@ onMounted(reloadAll)
             :month-range="juvenileFilter.monthRange"
             :chart-type="juvenileChartType"
             :unit-options="cityBranchUnitOptions"
-            :unit-name="juvenileFilter.unitName"
+            :dept-id="juvenileFilter.deptId"
             @change-month-range="updateJuvenileMonthRange"
             @change-chart="juvenileChartType = $event"
             @update-unit="updateJuvenileUnit"

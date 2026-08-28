@@ -67,10 +67,7 @@ export function useDashboardData() {
   }
 
   // 接处警数据
-  const loadAlarmKpi = params => loadModule('alarmKpi', () => getAlarmKpi(params), alarmKpi => ({
-    alarmKpi,
-    updateTime: alarmKpi.updateTime
-  }))
+  const loadAlarmKpi = params => loadModule('alarmKpi', () => getAlarmKpi(params), alarmKpi => ({ alarmKpi }))
 
   // 战果类数据
   const loadResult = params => loadModule('result', () => getResultKpi(params), result => ({ result }))

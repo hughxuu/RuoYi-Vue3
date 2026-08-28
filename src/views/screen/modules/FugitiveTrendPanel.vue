@@ -11,6 +11,11 @@ const chartRef = ref(null)
 const { setOption } = useECharts(chartRef)
 
 const renderChart = () => {
+  const colors = ['#6b96e8', '#86c75b', '#f2a62b']
+  const seriesList = props.data.seriesList || []
+  const xAxis = props.data.xAxis?.length
+    ? props.data.xAxis
+    : Array.from({ length: Math.max(...seriesList.map(item => item.data?.length || 0), 0) }, (_, index) => index + 1)
   setOption({
     backgroundColor: 'transparent',
     legend: {
@@ -25,7 +30,7 @@ const renderChart = () => {
     tooltip: createDashboardTooltip(),
     grid: { left: 48, right: 22, top: 46, bottom: 34, containLabel: true },
     xAxis: {
-      data: props.data.xAxis,
+      data: xAxis,
       axisLine: { lineStyle: { color: '#38536a' } },
       axisLabel: { color: '#a8b4c1', interval: 4 },
       axisTick: { show: false }
@@ -41,38 +46,16 @@ const renderChart = () => {
       axisLine: { show: false },
       axisTick: { show: false }
     },
-    series: [
-      {
-        name: '抓获网逃数',
-        type: 'line',
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 7,
-        data: props.data.caught,
-        lineStyle: { width: 2, color: '#6b96e8' },
-        itemStyle: { color: '#8ab4ff' }
-      },
-      {
-        name: '在逃网逃数',
-        type: 'line',
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 7,
-        data: props.data.atLarge,
-        lineStyle: { width: 2, color: '#86c75b' },
-        itemStyle: { color: '#b5df80' }
-      },
-      {
-        name: '新增网逃数',
-        type: 'line',
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 7,
-        data: props.data.newlyAdded,
-        lineStyle: { width: 2, color: '#f2a62b' },
-        itemStyle: { color: '#ffb146' }
-      }
-    ]
+    series: seriesList.map((item, index) => ({
+      name: item.name,
+      type: 'line',
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 7,
+      data: item.data || [],
+      lineStyle: { width: 2, color: colors[index] || colors[0] },
+      itemStyle: { color: colors[index] || colors[0] }
+    }))
   })
 }
 

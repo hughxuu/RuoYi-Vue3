@@ -22,56 +22,25 @@ const chartRef = ref(null)
 const { setOption } = useECharts(chartRef)
 
 const renderChart = () => {
-  const lineChartData = [
-    {
-      name: '自接警数',
-      type: 'line',
-      smooth: true,
-      data: props.data.self,
-      lineStyle: { color: '#6b96e8', width: 2 }
-    },
-    {
-      name: '转警数',
-      type: 'line',
-      smooth: true,
-      data: props.data.transfer,
-      lineStyle: { color: '#86c75b', width: 2 }
-    },
-    {
-      name: '110派警数',
-      type: 'line',
-      smooth: true,
-      data: props.data.dispatch,
-      lineStyle: { color: '#f2b841', width: 2 }
-    }
-  ]
-
-  const barChartData = [
-    {
-      name: '自接警数',
-      type: 'bar',
-      barWidth: 10,
-      data: props.data.self,
-      itemStyle: { color: '#6b96e8' }
-    },
-    {
-      name: '转警数',
-      type: 'bar',
-      barWidth: 10,
-      data: props.data.transfer,
-      itemStyle: { color: '#86c75b' }
-    },
-    {
-      name: '110派警数',
-      type: 'line',
-      smooth: true,
-      symbol: 'circle',
-      symbolSize: 6,
-      data: props.data.dispatch,
-      lineStyle: { width: 2, color: '#f2b841' },
-      itemStyle: { color: '#ffe186' }
-    }
-  ]
+  const colors = ['#6b96e8', '#86c75b', '#f2b841']
+  const seriesList = props.data.seriesList || []
+  const xAxis = props.data.xAxis?.length
+    ? props.data.xAxis
+    : Array.from({ length: Math.max(...seriesList.map(item => item.data?.length || 0), 0) }, (_, index) => index + 1)
+  const lineChartData = seriesList.map((item, index) => ({
+    name: item.name,
+    type: 'line',
+    smooth: true,
+    data: item.data || [],
+    lineStyle: { color: colors[index] || colors[0], width: 2 }
+  }))
+  const barChartData = seriesList.map((item, index) => ({
+    name: item.name,
+    type: 'bar',
+    barWidth: 10,
+    data: item.data || [],
+    itemStyle: { color: colors[index] || colors[0] }
+  }))
 
   setOption({
     legend: {
@@ -92,7 +61,7 @@ const renderChart = () => {
       containLabel: true
     },
     xAxis: {
-      data: props.data.xAxis,
+      data: xAxis,
       axisLine: {
         lineStyle: { color: '#38536a' }
       },

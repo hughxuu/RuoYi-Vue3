@@ -37,6 +37,15 @@ const setField = (key, value) => {
     [key]: value
   })
 }
+
+const setUnit = (deptId) => {
+  const unit = props.unitOptions.find(item => item.deptId === deptId)
+  emit('update:modelValue', {
+    ...props.modelValue,
+    deptId: deptId || '全部单位',
+    deptName: unit?.deptName || '全部单位'
+  })
+}
 </script>
 
 <template>
@@ -56,13 +65,13 @@ const setField = (key, value) => {
       />
       <span class="whitespace-nowrap text-sm text-muted">基层单位</span>
       <el-select
-        :model-value="modelValue.unitName"
+        :model-value="modelValue.deptId"
         popper-class="dashboard-popper"
         class="dashboard-select w-40 max-md:w-full"
         placeholder="全部单位"
-        @update:model-value="setField('unitName', $event)"
+        @update:model-value="setUnit"
       >
-        <el-option label="全部单位" value="" />
+        <el-option label="全部单位" value="全部单位" />
         <el-option
           v-for="unit in unitOptions"
           :key="unit.deptId"
@@ -71,12 +80,12 @@ const setField = (key, value) => {
         />
       </el-select>
       <el-segmented
-        :model-value="modelValue.period"
+        :model-value="modelValue.statType"
         :options="PERIOD_OPTIONS"
         aria-label="统计周期"
         class="dashboard-period w-40"
         size="default"
-        @change="setField('period', $event)"
+        @change="setField('statType', $event)"
       />
     </div>
     <div class="ml-auto flex shrink-0 max-md:ml-0 max-md:w-full">
