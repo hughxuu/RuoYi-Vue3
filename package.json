@@ -9,7 +9,9 @@
     "build:stage": "vite build --mode staging",
     "preview": "vite preview",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "worma:init": "worma init",
+    "worma:gen": "worma gen"
   },
   "dependencies": {
     "@element-plus/icons-vue": "2.3.2",
@@ -45,7 +47,8 @@
     "unplugin-vue-setup-extend-plus": "1.0.1",
     "vite": "6.4.1",
     "vite-plugin-compression": "0.5.1",
-    "vite-plugin-svg-icons": "2.0.1"
+    "vite-plugin-svg-icons": "2.0.1",
+    "wormajs": "^0.3.0"
   },
   "overrides": {
     "quill": "2.0.2"

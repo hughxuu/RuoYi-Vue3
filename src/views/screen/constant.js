@@ -24,71 +24,30 @@ const getCurrentMonthRange = () => {
 
 export const createInitialQuery = () => ({
   ...getCurrentMonthRange(),
-  unitName: '',
-  period: 'day'
-})
-
-const emptyMetric = () => ({
-  value: '-',
-  rate: '-',
-  up: true
+  deptName: '全部单位',
+  deptId: '全部单位',
+  statType: 'day'
 })
 
 export const createEmptyDashboard = () => ({
   updateTime: '-',
-  alarmKpi: {
-    total: emptyMetric(),
-    selfAlarm: emptyMetric(),
-    transfer: emptyMetric(),
-    dispatch110: emptyMetric()
-  },
-  result: {
-    fugitive: emptyMetric(),
-    gang: emptyMetric(),
-    current: emptyMetric()
-  },
+  alarmKpi: {},
+  result: {},
   pie: {
-    red: 0,
-    orange: 0,
-    yellow: 0,
-    blue: 0,
-    gray: 0,
-    dayChange: '-'
+    total: 0,
+    ratioCompareYesterday: '-',
+    dataList: []
   },
   lineFugitive: {
     xAxis: [],
-    caught: [],
-    atLarge: [],
-    newlyAdded: []
+    seriesList: []
   },
   lineAlarm: {
     xAxis: [],
-    self: [],
-    transfer: [],
-    dispatch: []
+    seriesList: []
   },
-  rank: {
-    units: [],
-    values: [],
-    stats: {
-      monthTotal: '-',
-      lastMonth: '-',
-      yoy: '-',
-      wow: '-'
-    }
-  },
-  juvenile: {
-    xAxis: [],
-    self: [],
-    transfer: [],
-    dispatch: [],
-    stats: {
-      monthTotal: '-',
-      lastMonth: '-',
-      yoy: '-',
-      wow: '-'
-    }
-  },
+  rank: { data: [] },
+  juvenile: { data: [] },
   specialPoliceUnits: [],
   cityBranchUnits: []
 })

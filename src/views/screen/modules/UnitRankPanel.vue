@@ -2,14 +2,13 @@
 import { onMounted, ref, watch } from 'vue'
 import ChartTypeToggle from '../components/ChartTypeToggle.vue'
 import ScreenPanel from '../components/ScreenPanel.vue'
-import StatItem from '../components/StatItem.vue'
 import { createDashboardTooltip, useECharts } from '../composables/useECharts'
 
 const props = defineProps({
   data: { type: Object, required: true },
   monthRange: { type: Array, default: null },
   unitOptions: { type: Array, default: () => [] },
-  unitName: { type: String, default: '' },
+  deptId: { type: [String, Number], default: '全部单位' },
   chartType: { type: String, required: true }
 })
 
@@ -18,46 +17,29 @@ const chartRef = ref(null)
 const { setOption } = useECharts(chartRef)
 
 const renderChart = () => {
+  const dataList = props.data.data || []
+  const colors = ['#6b96e8', '#86c75b']
   const lineChartData = [
     {
-      name: '抢劫',
+      name: '两抢一盗案件数',
       type: 'line',
       smooth: true,
       symbol: 'circle',
       symbolSize: 5,
-      data: props.data.trend?.robbery || props.data.trend?.values || [],
-      lineStyle: { width: 2, color: '#6b96e8' },
-      itemStyle: { color: '#6b96e8' }
-    },
-    {
-      name: '盗窃',
-      type: 'line',
-      smooth: true,
-      symbol: 'circle',
-      symbolSize: 5,
-      data: props.data.trend?.theft || [],
-      lineStyle: { width: 2, color: '#86c75b' },
-      itemStyle: { color: '#86c75b' }
-    },
-    {
-      name: '扒窃',
-      type: 'line',
-      smooth: true,
-      symbol: 'circle',
-      symbolSize: 5,
-      data: props.data.trend?.pickpocket || [],
-      lineStyle: { width: 2, color: '#f2b841' },
-      itemStyle: { color: '#f2b841' }
+      data: dataList.map(item => item.monthTotal || 0),
+      lineStyle: { width: 2, color: colors[0] },
+      itemStyle: { color: colors[0] }
     }
   ]
 
   const barChartData = [
     {
+      name: '两抢一盗案件数',
       type: 'bar',
-      data: props.data.values,
+      data: dataList.map(item => item.monthTotal || 0),
       barWidth: 12,
       label: { show: true, position: 'right', color: '#cbd7df' },
-      itemStyle: { color: '#4f75b8' }
+      itemStyle: { color: colors[0] }
     }
   ]
 
@@ -81,7 +63,7 @@ const renderChart = () => {
       : { left: 70, right: 32, top: 20, bottom: 24, containLabel: true },
     xAxis: props.chartType === 'line'
       ? {
-          data: props.data.trend?.xAxis || [],
+          data: dataList.map(item => item.statDate),
           axisLabel: { color: '#a8b4c1' },
           axisLine: { lineStyle: { color: '#38536a' } }
         }
@@ -102,7 +84,7 @@ const renderChart = () => {
       : {
           type: 'category',
           inverse: true,
-          data: props.data.units,
+          data: dataList.map(item => item.statDate),
           axisLabel: { color: '#c1ccd6' },
           axisLine: { show: false },
           axisTick: { show: false }
@@ -139,24 +121,17 @@ onMounted(renderChart)
       <el-select
         popper-class="dashboard-popper"
         class="dashboard-select min-w-0 flex-1"
-        :model-value="unitName"
+        :model-value="deptId"
         clearable
         size="small"
         placeholder="全部单位"
         @update:model-value="emit('update-unit', $event)"
       >
-        <el-option label="全部单位" value="" />
-        <el-option v-for="{ deptId, deptName } in unitOptions" :key="deptId" :label="deptName" :value="deptId" />
+        <el-option label="全部单位" value="全部单位" />
+        <el-option v-for="unit in unitOptions" :key="unit.deptId" :label="unit.deptName" :value="unit.deptId" />
       </el-select>
     </div>
 
     <div ref="chartRef" class="min-h-0 flex-1 w-full" />
-
-    <div class="grid shrink-0 grid-cols-4 gap-1 px-3 pb-2">
-      <StatItem label="本月累计" :value="data.stats?.monthTotal" />
-      <StatItem label="较上月" :value="data.stats?.lastMonth" tone="red" />
-      <StatItem label="同比去年" :value="data.stats?.yoy" tone="green" />
-      <StatItem label="环比上周" :value="data.stats?.wow" tone="red" />
-    </div>
   </ScreenPanel>
 </template>
