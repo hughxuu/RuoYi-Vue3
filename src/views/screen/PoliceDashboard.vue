@@ -14,8 +14,7 @@ import MinorDistributionPanel from './modules/MinorDistributionPanel.vue'
 import ResultPanel from './modules/ResultPanel.vue'
 import UnitRankPanel from './modules/UnitRankPanel.vue'
 
-const screenRef = shallowRef(null)
-const { isFullscreen, toggle } = useFullscreen(screenRef, { autoExit: true })
+const { isFullscreen, toggle } = useFullscreen(undefined, { autoExit: true })
 const {
   dashboard,
   isLoading: loading,
@@ -192,10 +191,7 @@ onMounted(reloadAll)
 
 <template>
   <div class="dashboard">
-    <div
-      ref="screenRef"
-      class="flex h-screen w-full flex-col overflow-x-hidden overflow-y-auto bg-canvas bg-grid bg-grid-size font-ui text-content"
-    >
+    <div class="flex h-screen w-full flex-col overflow-x-hidden overflow-y-auto bg-canvas bg-grid bg-grid-size font-ui text-content">
       <ScreenHeader
         :update-time="dashboard.updateTime"
         :loading="loading"
@@ -217,18 +213,14 @@ onMounted(reloadAll)
         class="grid min-h-0 flex-1 grid-cols-1 gap-3 max-lg:grid-rows-layout-mobile lg:min-h-[84rem] lg:grid-cols-2 xl:min-h-0 xl:grid-cols-layout-desktop p-3 lg:p-4"
         :class="{ 'opacity-80': loading }"
       >
-        <div
-          class="grid min-h-0 grid-rows-layout-mobile-left gap-3 lg:row-span-2 lg:grid-rows-layout-left xl:row-span-1"
-        >
+        <div class="grid min-h-0 grid-rows-layout-mobile-left gap-3 lg:row-span-2 lg:grid-rows-layout-left xl:row-span-1">
           <AlarmKpiPanel :data="dashboard.alarmKpi" />
           <ResultPanel :data="dashboard.result" />
           <MinorDistributionPanel :data="dashboard.pie" />
         </div>
 
         <section class="grid min-h-0 grid-rows-layout-mobile-stack gap-3 lg:grid-rows-layout-stack">
-          <FugitiveTrendPanel
-            :data="dashboard.lineFugitive"
-          />
+          <FugitiveTrendPanel :data="dashboard.lineFugitive" />
           <AlarmTrendPanel
             :data="dashboard.lineAlarm"
             :chart-type="alarmChartType"
