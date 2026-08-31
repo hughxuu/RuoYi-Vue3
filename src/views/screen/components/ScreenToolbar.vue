@@ -4,6 +4,7 @@ import { computed } from 'vue'
 import { PERIOD_OPTIONS } from '../constant'
 
 const props = defineProps({
+  deptId: { type: [String,Number,null], default: null },
   modelValue: {
     type: Object,
     required: true
@@ -42,8 +43,10 @@ const setUnit = (deptId) => {
   const unit = props.unitOptions.find(item => item.deptId === deptId)
   emit('update:modelValue', {
     ...props.modelValue,
-    deptId: deptId || '全部单位',
-    deptName: unit?.deptName || '全部单位'
+    // deptId: deptId || '全部单位',
+    // deptName: unit?.deptName || '全部单位'
+    deptId: deptId,
+    deptName: unit?.deptName
   })
 }
 </script>
@@ -71,7 +74,7 @@ const setUnit = (deptId) => {
         placeholder="全部单位"
         @update:model-value="setUnit"
       >
-        <el-option label="全部单位" value="全部单位" />
+        <el-option label="全部单位" :value="null"/>
         <el-option
           v-for="unit in unitOptions"
           :key="unit.deptId"

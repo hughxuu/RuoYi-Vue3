@@ -9,7 +9,8 @@ const props = defineProps({
   monthRange: { type: Array, default: null },
   chartType: { type: String, required: true },
   unitOptions: { type: Array, default: () => [] },
-  deptId: { type: [String, Number], default: '全部单位' }
+  // deptId: { type: [String, Number], default: '全部单位' }
+  deptId: { type: [String, Number], default: null }
 })
 
 const emit = defineEmits(['change-month-range', 'change-chart', 'update-unit'])
@@ -17,7 +18,27 @@ const chartRef = ref(null)
 const { setOption } = useECharts(chartRef)
 
 const renderChart = () => {
-  const dataList = props.data.data || []
+  // const dataList = props.data.data || []
+  // 🔄 兼容新旧数据格式：优先判断是否有 seriesList
+  const raw = props.data.data || props.data;      // 兼容两种传递方式
+  let dataList;
+  if (raw && raw.seriesList && Array.isArray(raw.seriesList) && raw.xAxis) {
+    // 🔄 新格式：从 seriesList 中提取两个系列的数据
+    const seriesMap = {};
+    raw.seriesList.forEach(ser => {
+      seriesMap[ser.name] = ser.data;
+    });
+    const caseData = seriesMap['未成年犯罪案件数'] || [];
+    const personData = seriesMap['涉未成年人数'] || [];
+    dataList = raw.xAxis.map((date, idx) => ({
+      statDate: date,
+      minorCaseCount: caseData[idx] || 0,
+      minorPerson: personData[idx] || 0
+    }));
+  } else {
+    // 🔄 旧格式（或直接传入数组）保留原逻辑
+    dataList = raw || [];
+  }
   const colors = ['#6b96e8', '#86c75b']
   const lineChartData = [
     {
@@ -25,9 +46,9 @@ const renderChart = () => {
       type: 'line',
       smooth: true,
       symbol: 'circle',
-      symbolSize: 5,
+      symbolSize: 12,
       data: dataList.map(item => item.minorCaseCount || 0),
-      lineStyle: { width: 2, color: colors[0] },
+      lineStyle: { width: 5, color: colors[0] },
       itemStyle: { color: colors[0] }
     },
     {
@@ -35,9 +56,9 @@ const renderChart = () => {
       type: 'line',
       smooth: true,
       symbol: 'circle',
-      symbolSize: 5,
+      symbolSize: 12,
       data: dataList.map(item => item.minorPerson || 0),
-      lineStyle: { width: 2, color: colors[1] },
+      lineStyle: { width: 5, color: colors[1] },
       itemStyle: { color: colors[1] }
     }
   ]
@@ -126,7 +147,7 @@ onMounted(renderChart)
         placeholder="全部单位"
         @update:model-value="emit('update-unit', $event)"
       >
-        <el-option label="全部单位" value="全部单位" />
+        <el-option label="全部单位" :value="null"/>
         <el-option v-for="unit in unitOptions" :key="unit.deptId" :label="unit.deptName" :value="unit.deptId" />
       </el-select>
     </div>

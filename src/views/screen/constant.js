@@ -24,8 +24,8 @@ const getCurrentMonthRange = () => {
 
 export const createInitialQuery = () => ({
   ...getCurrentMonthRange(),
-  deptName: '全部单位',
-  deptId: '全部单位',
+  // deptName: '全部单位',
+  // deptId: '全部单位',
   statType: 'day'
 })
 

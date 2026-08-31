@@ -30,9 +30,10 @@ const renderChart = () => {
   const lineChartData = seriesList.map((item, index) => ({
     name: item.name,
     type: 'line',
+    symbolSize: 12,
     smooth: true,
     data: item.data || [],
-    lineStyle: { color: colors[index] || colors[0], width: 2 }
+    lineStyle: { color: colors[index] || colors[0], width: 5 }
   }))
   const barChartData = seriesList.map((item, index) => ({
     name: item.name,
@@ -75,8 +76,6 @@ const renderChart = () => {
     },
     yAxis: {
       min: 0,
-      max: 1800,
-      interval: 300,
       splitLine: {
         lineStyle: {
           color: 'rgba(72,108,132,.28)',

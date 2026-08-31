@@ -81,7 +81,7 @@ onMounted(renderChart)
     </div>
 
     <div class="flex h-9 shrink-0 items-center justify-center gap-2 border-t border-line-muted/60 bg-black/10 text-sm text-muted">
-      <span>较昨日</span>
+      <span>同比</span>
       <TrendValue :value="data.ratioCompareYesterday" class="font-bold text-2xl text-success" />
     </div>
   </ScreenPanel>

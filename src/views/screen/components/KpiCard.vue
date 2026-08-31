@@ -17,7 +17,7 @@ defineProps({
   },
   note: {
     type: String,
-    default: '较昨日'
+    default: '同比'
   },
   rate: {
     type: [String, Number],

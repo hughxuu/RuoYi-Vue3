@@ -34,13 +34,13 @@ const createInitialMonthRange = () => [
 ]
 const rankFilter = shallowRef({
   monthRange: createInitialMonthRange(),
-  deptId: '全部单位',
-  deptName: '全部单位'
+  // deptId: '全部单位',
+  // deptName: '全部单位'
 })
 const juvenileFilter = shallowRef({
   monthRange: createInitialMonthRange(),
-  deptId: '全部单位',
-  deptName: '全部单位'
+  // deptId: '全部单位',
+  // deptName: '全部单位'
 })
 
 const specialPoliceUnitOptions = computed(() => dashboard.value.specialPoliceUnits)
@@ -85,8 +85,10 @@ const updatePanelUnit = (filter, deptId, unitOptions, reloadPanel) => {
   const selectedUnit = unitOptions.value.find(unit => unit.deptId === deptId)
   const nextFilter = {
     ...filter.value,
-    deptId: deptId || '全部单位',
-    deptName: selectedUnit?.deptName || '全部单位'
+    // deptId: deptId || '全部单位',
+    // deptName: selectedUnit?.deptName || '全部单位'
+    deptId: deptId,
+    deptName: selectedUnit?.deptName
   }
   filter.value = nextFilter
   void reloadPanel(createPanelQuery(nextFilter))
